@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>金陵总观</title>
+
+    <script src='https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js'></script>
+    <script src='static/echarts-wordcloud.js'></script>
+
+
+
+</head>
+<style>
+    @font-face {
+        font-family: '生肖体';
+        src: url('static/font-family/汉字之美神勇兔生肖体.ttf') format('truetype');
+    }
+
+    @font-face {
+        font-family: '正楷体';
+        src: url('static/font-family/TaiWanQuanZiKuZhengKaiTi-2.ttf') format('truetype');
+    }
+
+    @font-face {
+        font-family: '行楷';
+        src: url('static/font-family/方正行楷简体.ttf') format('truetype');
+    }
+
+    @font-face {
+        font-family: '方正宋';
+        src: url('static/font-family/方正清刻本悦宋简体.ttf') format('truetype');
+    }
+
+
+    body {
+        background-image: url('static/img/bg1_img.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
+        margin: 0;
+        height: 100vh;
+        position: relative;
+        overflow: hidden;
+        /* 这是重要的，因为我们将使用绝对定位 */
+    }
+
+    #left-middle {
+        position: absolute;
+        top: 15%;
+        /* 第2/6的高度 */
+        bottom: 25%;
+        /* 第4/6的高度 */
+
+        left: 10%;
+        /* 3/14的宽度 */
+        right: 50%;
+        /* 6/16的宽度 */
+    }
+
+    #cloud-middle {
+        position: absolute;
+        background-color: rgba(179, 191, 185, 0.5);
+        top: 15%;
+        /* 第2/6的高度 */
+        bottom: 25%;
+        /* 第3/6的高度 */
+        left: 53%;
+        /* 9/14的宽度 */
+        right: 10%;
+        /* 12/16的宽度 */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #cloud-word-img {
+        position: absolute;
+        width: 100%;
+        /* 或您想要的具体尺寸 */
+        height: 100%;
+        /* 或您想要的具体尺寸 */
+        /* 其他必要的样式 */
+        transform: translate(-35%, -13%);
+        /* 根据需要调整这个值 */
+    }
+
+
+    .image-button {
+        position: absolute;
+        background-size: 100% 100%;
+        /* 设置按钮背景图像 */
+        /* background-size: cover; */
+        /* 确保图片覆盖整个按钮 */
+        background-repeat: no-repeat;
+        /* 防止图片重复 */
+        border: none;
+        /* 移除边框 */
+        cursor: pointer;
+        /* 鼠标悬停时显示指针形状 */
+        top: 85%;
+        /* 第2/6的高度 */
+
+        bottom: 3%;
+        /* 第3/6的高度 */
+        left: 85%;
+        /* 9/14的宽度 */
+        right: 5%;
+        /* 12/16的宽度 */
+
+        background-color: transparent;
+        background-image: url('static/img/re_button_img.png');
+
+    }
+
+    .discription {
+        position: absolute;
+        background-color: rgba(179, 191, 185, 0.7);
+        color: black;
+        /* #9a9a50 */
+        text-indent: 2em;
+        font-size: 20px;
+        line-height: 30px;
+        font-family: '行楷';
+        left: 20%;
+        right: 20%;
+        z-index: 2;
+        top: 83%;
+        bottom: 0%;
+        padding-top: 10px;
+        padding-left: 20px;
+    }
+
+    #changedes {
+        position: absolute;
+        left: 55%;
+        right: 12%;
+        top: 77%;
+        bottom: 17%;
+        background-color: rgba(179, 191, 185, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        font-family: '行楷';
+    }
+
+
+    select {
+        padding: 10px;
+        /* 内边距 */
+        margin: 10px;
+        /* 外边距 */
+        border: 1px solid #ccc;
+        /* 边框 */
+        border-radius: 5px;
+        /* 边框圆角 */
+        background-color: white;
+        /* 背景色 */
+        font-family: '行楷';
+        font-size: 15px;
+        /* 字体 */
+        cursor: pointer;
+        /* 鼠标样式 */
+    }
+
+    /* 当鼠标悬停在select上时 */
+    select:hover {
+        border-color: #888;
+        /* 改变边框颜色 */
+    }
+
+    #myButton {
+        padding: 3px 8px;
+        /* 内边距 */
+        margin: 10px;
+        /* 外边距 */
+        border: none;
+        /* 移除边框 */
+        border-radius: 5px;
+        font-size: 15px;
+        /* 边框圆角 */
+        background-color: #ee3f4d;
+        /* 背景色 */
+        color: white;
+        /* 文字颜色 */
+        font-family: '行楷';
+        /* 字体 */
+        cursor: pointer;
+        /* 鼠标样式 */
+        transition: background-color 0.3s;
+        /* 过渡效果 */
+    }
+
+    #myButton:hover {
+        background-color: #a61b29;
+        /* 改变背景色 */
+    }
+</style>
+
+
+<body>
+    <!-- <p>实验文字</p> -->
+
+    <div class="middle-section" id="left-middle">
+
+
+    </div>
+
+    <div id="cloud-middle">
+
+
+    </div>
+
+
+    <p class="discription">明朝金陵诗词作品的数量最多，说明当时的金陵非常繁华。
+        左侧展示的是各个朝代的作品数量统计，右侧可以选择两个朝代进行文体数量的对比。用户不仅可以更好地了解不同朝代不同文体的作品数量，
+        而且可以了解金陵诗词文化的整体演变，</p>
+    <div id='changedes'>
+        <div>对比的朝代：</div>
+        <select id="mySelect1">
+            <!-- 使用 <option> 元素创建选项 -->
+            <option value="清">清</option>
+            <option value="明">明</option>
+            <option value="现当代">现当代</option>
+            <option value="唐">唐</option>
+            <option value="宋">宋</option>
+            <option value="南朝">南朝</option>
+        </select>
+        <select id="mySelect2">
+            <!-- 使用 <option> 元素创建选项 -->
+            <option value="清">清</option>
+            <option value="明">明</option>
+            <option value="现当代">现当代</option>
+            <option value="唐">唐</option>
+            <option value="宋">宋</option>
+            <option value="南朝">南朝</option>
+        </select>
+
+        <button type="button" id="myButton">提交选项</button>
+        <!-- <div></div> -->
+    </div>
+
+
+    <button class="image-button" id="reButton1"></button>
+</body>
+<script>
+
+    document.getElementById('myButton').addEventListener('click', function () {
+        // 获取选择框的值
+        var selectedOption1 = document.getElementById('mySelect1').value;
+        var selectedOption2 = document.getElementById('mySelect2').value;
+
+        // 将选项数据组成一个对象
+        var data = {
+            option1: selectedOption1,
+            option2: selectedOption2
+        };
+
+        // 使用 Ajax 发送数据到后端
+        fetch('/select', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then(result => {
+                //var scoresList = JSON.parse(result);
+                tjoption.legend.data = [result['name1'], result['name2']]
+                tjoption.series[0].name = result['name1'];
+                tjoption.series[0].data = result['option1'];
+                tjoption.series[1].name = result['name2'];
+                tjoption.series[1].data = result['option2'];
+                tjoption && tjCharts.setOption(tjoption);
+            })
+            .catch(error => console.error('Error:', error));
+    });
+
+    // 当文档加载完毕时执行
+    document.addEventListener('DOMContentLoaded', function () {
+        // 获取ID为'myButton1'的按钮
+        var myButton1 = document.getElementById('reButton1');
+
+        // 添加点击事件监听器
+        myButton1.addEventListener('click', function () {
+            // 当按钮被点击时，跳转到 'page_base.html'
+            window.location.href = '/';
+        });
+    });
+
+</script>
+<script>
+    // 步骤3：初始化echarts实例对象
+    var tjCharts = echarts.init(document.querySelector('#cloud-middle'));
+    var app = {};
+    const posList = [
+        'left',
+        'right',
+        'top',
+        'bottom',
+        'inside',
+        'insideTop',
+        'insideLeft',
+        'insideRight',
+        'insideBottom',
+        'insideTopLeft',
+        'insideTopRight',
+        'insideBottomLeft',
+        'insideBottomRight'
+    ];
+    app.configParameters = {
+        rotate: {
+            min: -90,
+            max: 90
+        },
+        align: {
+            options: {
+                left: 'left',
+                center: 'center',
+                right: 'right'
+            }
+        },
+        verticalAlign: {
+            options: {
+                top: 'top',
+                middle: 'middle',
+                bottom: 'bottom'
+            }
+        },
+        position: {
+            options: posList.reduce(function (map, pos) {
+                map[pos] = pos;
+                return map;
+            }, {})
+        },
+        distance: {
+            min: 0,
+            max: 100
+        }
+    };
+    app.config = {
+        rotate: 90,
+        align: 'left',
+        verticalAlign: 'middle',
+        position: 'insideBottom',
+        distance: 15,
+        onChange: function () {
+            const labelOption = {
+                rotate: app.config.rotate,
+                align: app.config.align,
+                verticalAlign: app.config.verticalAlign,
+                position: app.config.position,
+                distance: app.config.distance
+            };
+            myChart.setOption({
+                series: [
+                    {
+                        label: labelOption
+                    },
+                    {
+                        label: labelOption
+                    },
+                    {
+                        label: labelOption
+                    },
+                    {
+                        label: labelOption
+                    }
+                ]
+            });
+        }
+    };
+    const labelOption = {
+        show: true,
+        position: app.config.position,
+        distance: app.config.distance,
+        align: app.config.align,
+        verticalAlign: app.config.verticalAlign,
+        rotate: app.config.rotate,
+        formatter: '{c}  {name|{a}}',
+        fontSize: 16,
+        rich: {
+            name: {}
+        }
+    };
+
+
+    tjoption = {
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        legend: {
+            data: ['明朝', '清朝']
+        },
+        toolbox: {
+            show: true,
+            orient: 'vertical',
+            left: 'right',
+            top: 'center',
+            feature: {
+                mark: { show: true },
+                dataView: { show: true, readOnly: false },
+                magicType: { show: true, type: ['stack'] },
+
+                saveAsImage: { show: true }
+            }
+        },
+        xAxis: [
+            {
+                type: 'category',
+                axisTick: { show: false },
+                data: ['五言', '文', '史书', '集', '诗', '曲', '七言', '美学', '赋', '词'] // 年份替换为类型
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value'
+            }
+        ],
+        series: [
+            {
+                name: '明朝',
+                type: 'bar',
+                barGap: 0,
+                label: labelOption,
+                itemStyle: {
+                    color: '#f7da94' // 明朝数据柱的颜色
+                },
+                emphasis: {
+                    focus: 'series'
+                },
+                data: [45, 133, 20, 76, 21, 49, 88, 14, 6, 83] // 明朝数据
+            },
+            {
+                name: '清朝',
+                type: 'bar',
+                label: labelOption,
+                itemStyle: {
+                    color: '#815A85' // 清朝数据柱的颜色
+                },
+                emphasis: {
+                    focus: 'series'
+                },
+                data: [51, 121, 5, 57, 31, 26, 102, 7, 1, 77] // 清朝数据
+            }
+        ]
+    };
+
+    tjoption && tjCharts.setOption(tjoption);
+
+
+</script>
+<script>
+
+    // 步骤3：初始化echarts实例对象
+    var charts = [];
+    var mCharts = echarts.init(document.querySelector('#left-middle'));
+
+    //饼图
+    var barOption = {
+        grid: {
+            left: '1%', // 增加左侧内边距
+            right: '5%',
+            bottom: '10%',
+            top: '10%',
+            containLabel: true
+        },
+        backgroundColor: 'rgba(179, 191, 185, 0.7)',
+        // title: {
+        //     text: 'Grades',
+        //     textAlign: 'center'
+        // },
+        xAxis: {
+            type: 'value',
+            show: true,    // 是否显示坐标轴轴线
+            symbol: ['none', 'arrow'],     // 轴线两端箭头，两个值，none表示没有箭头，arrow表示有箭头
+            lineStyle: {
+                color: '#333',    // 坐标轴线线的颜色
+                width: '5',    // 坐标轴线线宽
+                type: 'solid',    // 坐标轴线线的类型（solid实线类型；dashed虚线类型；dotted点状类型）
+            },
+            // position: 'top'
+        },
+        yAxis: {
+            type: 'category',
+            data: ['南朝', '宋', '现当代', '唐', '明', '清'],
+            axisLine: {
+                symbol: ['none', 'arrow'],
+                symbolOffset: [0, 10]
+            },
+            // inverse: true
+            axisLabel: {
+                show: true, // 显示标签
+                // 文本样式配置
+                textStyle: {
+                    color: 'black', // 文本颜色
+                    fontSize: 25,   // 文本字体大小
+                    fontFamily: '行楷' // 文本字体
+                }
+            }
+        },
+        series: [
+            {
+                name: 'yuwen',
+                type: 'bar',
+                // color: 'red',
+                data: [321, 131, 91, 132, 604, 566],
+                // 这里设置每个条的颜色
+                itemStyle: {
+                    normal: {
+                        color: function (params) {
+                            // 这里定义你的颜色数组
+                            var colorList = ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#f7da94', '#815A85'];
+                            return colorList[params.dataIndex];
+                        }
+                    }
+                }
+
+            }
+        ],
+        tooltip: {
+            trigger: 'item', // 触发类型，默认数据项触发
+            axisPointer: {   // 坐标轴指示器配置项
+                type: 'shadow' // 默认为直线指示器，可选为：'line' | 'shadow'
+            },
+            formatter: function (params) {
+                var data = params.data; // 获取数据
+                var name = params.name; // 获取类别名称
+                // 返回显示的字符串格式
+                return name + '<br/>数量: ' + data;
+            }
+        },
+    }
+
+    // 步骤5：将配置项设置给echarts实例对象
+    // chart1.setOption(option);
+
+
+
+    mCharts.setOption(barOption);
+
+    window.addEventListener('resize', function () {
+        charts.forEach(chart => {
+            chart.resize();
+        });
+    });
+
+
+
+</script>
+
+</html>

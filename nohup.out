@@ -1,0 +1,30 @@
+ * Serving Flask app 'app'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:80
+ * Running on http://172.23.68.150:80
+[33mPress CTRL+C to quit[0m
+ * Serving Flask app 'app'
+ * Debug mode: off
+Address already in use
+Port 80 is in use by another program. Either identify and stop that program, or start the server with a different port.
+ * Serving Flask app 'app'
+ * Debug mode: off
+Address already in use
+Port 80 is in use by another program. Either identify and stop that program, or start the server with a different port.
+91.92.245.105 - - [22/Dec/2023 21:48:30] "[33mGET /.git/config HTTP/1.1[0m" 404 -
+91.92.245.105 - - [22/Dec/2023 21:48:31] "[33mGET /.git/config HTTP/1.1[0m" 404 -
+91.92.245.105 - - [22/Dec/2023 21:48:35] "[33mGET /.git/config HTTP/1.1[0m" 404 -
+91.92.245.105 - - [22/Dec/2023 21:48:35] "[33mGET /.git/config HTTP/1.1[0m" 404 -
+ * Serving Flask app 'app'
+ * Debug mode: off
+Address already in use
+Port 80 is in use by another program. Either identify and stop that program, or start the server with a different port.
+ * Serving Flask app 'app'
+ * Debug mode: off
+Address already in use
+Port 80 is in use by another program. Either identify and stop that program, or start the server with a different port.
+139.155.238.84 - - [22/Dec/2023 22:16:12] "GET / HTTP/1.1" 200 -
+139.155.238.84 - - [22/Dec/2023 22:17:45] code 400, message Bad request version ('À\x14À')
+139.155.238.84 - - [22/Dec/2023 22:17:45] "[35m[1m\x16\x03\x01\x00î\x01\x00\x00ê\x03\x03PÕ$ó\x97s¥`%1Ô\x03­²Þá\x9f\x9d<\x09±\x92}X\x07\x010S(ÈQ^ ;ú\x09^VÂphMÊK\x81ã\x81\x8bx\x08ZrÇE-\x16\x96[\x8f\x83$WE\x0b×\x00&Ì¨Ì©À/À0À+À,À\x13À\x09À\x14À[0m" HTTPStatus.BAD_REQUEST -

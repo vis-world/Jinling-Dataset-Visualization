@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCU_Vis_Course_2023-2024</title>
+</head>
+<style>
+    @font-face {
+        font-family: '生肖体';
+        src: url('static/font-family/汉字之美神勇兔生肖体.ttf') format('truetype');
+    }
+
+    @font-face {
+        font-family: '正楷体';
+        src: url('static/font-family/TaiWanQuanZiKuZhengKaiTi-2.ttf') format('truetype');
+    }
+
+    @font-face {
+        font-family: '行楷';
+        src: url('static/font-family/方正行楷简体.ttf') format('truetype');
+    }
+
+    @font-face {
+        font-family: '方正宋';
+        src: url('static/font-family/方正清刻本悦宋简体.ttf') format('truetype');
+    }
+
+    /* 在这里设置背景图片 */
+    body {
+        /* 确保图片位于文件与HTML文件相同的目录下 */
+        background-image: url('static/img/汉.png');
+        background-size: cover;
+        /* 覆盖整个页面 */
+        background-repeat: no-repeat;
+        /* 防止图片重复 */
+        background-position: center center;
+        /* 图片居中显示 */
+        margin: 0;
+        /* 移除默认边距 */
+        height: 100vh;
+        /* 视口高度 */
+    }
+
+    .image-button {
+        background-color: transparent;
+        background-size: 100% 100%;
+        /* 设置按钮背景图像 */
+        /* background-size: cover; */
+        /* 确保图片覆盖整个按钮 */
+        background-repeat: no-repeat;
+        /* 防止图片重复 */
+        border: none;
+        /* 移除边框 */
+        cursor: pointer;
+        /* 鼠标悬停时显示指针形状 */
+
+        /* height: calc(100% / 2); */
+        /* 按钮高度 */
+        text-align: center;
+        /* 文字居中 */
+        color: white;
+
+        /* 文字颜色 */
+        /* 可以根据需要添加更多样式 */
+        /* transform: translateY(-80%); */
+
+    }
+
+    .wrapper {
+        display: flex;
+        /* 启用Flexbox */
+        justify-content: space-around;
+        /* 水平分布子元素 */
+        align-items: center;
+        /* 垂直居中子元素 */
+        height: 100vh;
+        /* 包装器的高度为视口高度，以便垂直居中 */
+    }
+
+    #myButton1 {
+        /* transform: translateX(120%) translateY(-40%); */
+        /* width: calc(100% / 9); */
+
+        background-image: url('static/img/1.1.png');
+        position: absolute;
+        left: 40%;
+        right: 35%;
+        top: 14.2%;
+        bottom: 71.4%;
+
+        /* 按钮宽度 */
+    }
+
+    #myButton2 {
+        /* transform: translateX(20%) translateY(-40%); */
+        /* width: calc(100% / 7.5); */
+        /* 按钮宽度 */
+        background-image: url('static/img/2.1.png');
+        position: absolute;
+        left: 40%;
+        right: 35%;
+        top: 42.9%;
+        bottom: 42.9%;
+    }
+
+    #myButton3 {
+        /* transform: translateX(-50%) translateY(-40%); */
+        /* width: calc(100% / 7); */
+        background-image: url('static/img/3.1.png');
+        /* 按钮宽度 */
+        position: absolute;
+        left: 40%;
+        right: 35%;
+        top: 71.4%;
+        bottom: 14.2%;
+    }
+
+    #myButton1:hover {
+        background-image: url('static/img/1.2.png');
+        /* 鼠标悬停状态 */
+    }
+
+    #myButton1:active {
+        background-image: url('static/img/1.3.png');
+        /* 鼠标按住状态 */
+    }
+
+    #myButton2:hover {
+        background-image: url('static/img/2.2.png');
+        /* 鼠标悬停状态 */
+    }
+
+    #myButton2:active {
+        background-image: url('static/img/2.3.png');
+        /* 鼠标按住状态 */
+    }
+
+    #myButton3:hover {
+        background-image: url('static/img/3.2.png');
+        /* 鼠标悬停状态 */
+    }
+
+    #myButton3:active {
+        background-image: url('static/img/3.3.png');
+        /* 鼠标按住状态 */
+    }
+
+
+    .bottom-right-text {
+        position: fixed;
+        /* 固定位置 */
+        right: 0;
+        /* 从右边界0px处开始 */
+        bottom: 0;
+        /* 从底边界0px处开始 */
+        width: 41%;
+        /* 容器宽度为视口宽度的40% */
+        height: 40%;
+        /* 容器高度为视口高度的30% */
+        /* background-color: #faf0cc; */
+        /* 背景颜色 */
+        font-size: 20px;
+
+        /* 字体大小 */
+        padding: 10px;
+        /* 内边距 */
+        box-sizing: border-box;
+        /* 包括内边距和边框在内的总宽度和总高度 */
+        overflow: auto;
+        /* 如果内容超出容器大小，则显示滚动条 */
+    }
+
+
+
+    .left-bottom-text-box {
+        position: absolute;
+
+        /* background-color: rgba(249, 215, 112, 0.5); */
+        background-color: transparent;
+        background-image: url('static/img/chang_kuang.png');
+        /* 设置背景图片 */
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+
+        /* 设置透明度 */
+        left: 2%;
+        right: 63%;
+        top: 43%;
+        bottom: 3%;
+        z-index: -1;
+        /* 确保背景在内容之下 */
+        /* width: 30%;
+        /* 容器宽度为视口宽度的40% */
+        /* height: 40%; */
+        /* 容器高度为视口高度的30% */
+
+        padding: 10px;
+        /* 内边距 */
+        box-sizing: border-box;
+        /* 包括内边距和边框在内的总宽度和总高度 */
+        overflow: auto;
+        /* 如果内容超出容器大小，则显示滚动条 */
+
+    }
+
+    .left-bottom-text-box p {
+        opacity: 1;
+        /* 设置透明度 */
+        position: relative;
+        /* 确保文本在背景之上 */
+        z-index: 1;
+    }
+
+    .left-bottom-text-box #head {
+        font-size: 50px;
+        line-height: 60px;
+        /* color: #1177b0; */
+        color: black;
+        text-align: center;
+        font-family: '行楷';
+        margin-bottom: 0%;
+        margin-top: 20px;
+    }
+
+    .left-bottom-text-box #passage {
+        font-size: 25px;
+        text-indent: 2em;
+        /* 首行缩进两个字符 */
+        /* color: #1177b0; */
+        color: black;
+        margin: 10px;
+        margin-left: 23px;
+        margin-right: 20px;
+        line-height: 36px;
+        font-family: '正楷体';
+        font-weight: 600;
+
+    }
+</style>
+
+<body>
+    <div class="wrapper">
+        <button class="image-button" id="myButton1" onmouseover="changeContent(1)" onmouseout="resetContent()"></button>
+        <button class="image-button" id="myButton2" onmouseover="changeContent(2)" onmouseout="resetContent()"></button>
+        <button class="image-button" id="myButton3" onmouseover="changeContent(3)" onmouseout="resetContent()"></button>
+    </div>
+
+    <div class="left-bottom-text-box">
+        <div></div>
+        <p id="head">千年金陵</p>
+        <p id="passage">本项目深入挖掘并且可视化展现了金陵（今南京）丰富而深厚的历史文化遗
+            产。借助“金陵文脉数据集”，我们深入探讨了金陵地区的历史事件、文学作品、
+            重要人物和地点的内在联系和发展演变。
+        </p>
+    </div>
+
+
+
+    <!-- <button class="image-button" id="myButton1" style="background-image: url('./img/汉1.png');"></button>
+    <button class="image-button" id="myButton2" style="background-image: url('./img/汉2.png');"></button>
+    <button class="image-button" id="myButton3" style="width: 300px; background-image: url('./img/汉3.png');"></button> -->
+
+</body>
+<script>
+    function changeContent(buttonNumber) {
+        var head = document.getElementById("head");
+        var passage = document.getElementById("passage");
+
+        if (buttonNumber === 1) {
+            head.textContent = "金陵总观";
+            passage.textContent = "金陵总观通过对各个朝代的作品数量统计，用户可以更好地了解不同朝代不同文体的作品数量。不仅可以让用户了解金陵诗词文化的整体演变，还可以帮助用户对金陵地区不同朝代的文学艺术有一个更加全面深入的理解。同时用户也能更加生动形象地感受到金陵诗词文化的魅力。";
+        } else if (buttonNumber === 2) {
+            head.textContent = "金陵朝歌";
+            passage.textContent = "金陵朝歌深入各个作品的联系，通过知识图谱展示了人与人、人与作品等之间的相关性，用户可以通过直观的交互式界面深入了解作品背后的灵感来源、作者之间的影响关系，简单而又直观的学习了解金陵作品的核心内涵，帮助其更好地理解金陵文学，感受金陵文化的要素。";
+        } else if (buttonNumber === 3) {
+            head.textContent = "金陵漫步";
+            passage.textContent = "金陵漫步展示每位作者的评分、词云、足迹等信息，呈现其影响力、作品风格和贡献。通过剖析相关信息，帮助用户更加深入地了解金陵文化的内涵及其演变历程。同时，通过这个界面，用户还可以更好地理解金陵诗词文化中各种风格的异同之处，从而获得更加全面深入的文化体验。";
+        }
+    }
+    function resetContent() {
+        var head = document.getElementById("head");
+        var passage = document.getElementById("passage");
+
+        head.textContent = "千年金陵";
+        passage.textContent = "本项目深入挖掘并且可视化展现了金陵（今南京）丰富而深厚的历史文化遗产。借助“金陵文脉数据集”，我们深入探讨了金陵地区的历史事件、文学作品、重要人物和地点的内在联系和发展演变。";
+    }
+
+
+    // 当文档加载完毕时执行
+    document.addEventListener('DOMContentLoaded', function () {
+        // 获取ID为'myButton1'的按钮
+        var myButton1 = document.getElementById('myButton1');
+
+        // 添加点击事件监听器
+        myButton1.addEventListener('click', function () {
+            // 当按钮被点击时，跳转到 'page_base.html'
+            window.location.href = 'page_base.html';
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // 获取ID为'myButton2'的按钮
+        var myButton1 = document.getElementById('myButton2');
+
+        // 添加点击事件监听器
+        myButton1.addEventListener('click', function () {
+            // 当按钮被点击时，跳转到 'page_form.html'
+            window.location.href = 'map&inf.html';
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // 获取ID为'myButton1'的按钮
+        var myButton1 = document.getElementById('myButton3');
+
+        // 添加点击事件监听器
+        myButton1.addEventListener('click', function () {
+            // 当按钮被点击时，跳转到 'page_base.html'
+            window.location.href = 'page2.html';
+        });
+    });
+</script>
+
+</html>

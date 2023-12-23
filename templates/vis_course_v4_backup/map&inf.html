@@ -1,0 +1,2197 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>金陵朝歌</title>
+    <!-- 引入 echarts.js -->
+    <script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://unpkg.com/vue@2.6.14/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <!--    <link rel="stylesheet" type="text/css" href="index_style.css">-->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+
+
+<style>
+    @font-face {
+        font-family: '生肖体';
+        src: url('static/font-family/汉字之美神勇兔生肖体.ttf') format('truetype');
+    }
+
+    @font-face {
+        font-family: '正楷体';
+        src: url('static/font-family/TaiWanQuanZiKuZhengKaiTi-2.ttf') format('truetype');
+    }
+
+    @font-face {
+        font-family: '行楷';
+        src: url('static/font-family/方正行楷简体.ttf') format('truetype');
+    }
+
+    @font-face {
+        font-family: '方正宋';
+        src: url('static/font-family/方正清刻本悦宋简体.ttf') format('truetype');
+    }
+
+    body {
+        /* 确保图片位于文件与HTML文件相同的目录下 */
+        background-image: url('static/img/background.png');
+        background-size: cover;
+        /* 覆盖整个页面 */
+        background-repeat: no-repeat;
+        /* 防止图片重复 */
+        background-position: center center;
+        /* 图片居中显示 */
+        margin: 0;
+        /* 移除默认边距 */
+        height: 100vh;
+        /* 视口高度 */
+        width: 100vw;
+    }
+
+    .right {
+
+        position: absolute;
+        top: 15%;
+        /* 第2/6的高度 */
+        bottom: 15%;
+        /* 第3/6的高度 */
+        left: 5%;
+        /* 9/14的宽度 */
+        right: 53%;
+        background-color: rgba(179, 191, 185, 0.5);
+
+
+        /* padding: 10px; */
+        /* 内边距 */
+        /* box-sizing: border-box; */
+        /* 包括内边距和边框在内的总宽度和总高度 */
+        /* overflow: auto; */
+        /* 如果内容超出容器大小，则显示滚动条 */
+    }
+
+    .image-button {
+        position: absolute;
+        background-size: 100% 100%;
+        /* 设置按钮背景图像 */
+        /* background-size: cover; */
+        /* 确保图片覆盖整个按钮 */
+        background-repeat: no-repeat;
+        /* 防止图片重复 */
+        border: none;
+        /* 移除边框 */
+        cursor: pointer;
+        /* 鼠标悬停时显示指针形状 */
+        top: 85%;
+        /* 第2/6的高度 */
+
+        bottom: 3%;
+        /* 第3/6的高度 */
+        left: 85%;
+        /* 9/14的宽度 */
+        right: 5%;
+        /* 12/16的宽度 */
+
+        background-color: transparent;
+        background-image: url('static/img/re_button_img.png');
+
+    }
+
+    #map {
+        position: absolute;
+        background-color: rgba(179, 191, 185, 0.5);
+        top: 15%;
+        /* 第2/6的高度 */
+        bottom: 15%;
+        /* 第3/6的高度 */
+        left: 53%;
+        /* 9/14的宽度 */
+        right: 5%;
+        /* 12/16的宽度 */
+        display: inline-block
+    }
+
+
+    svg {
+        position: absolute;
+        top: 5%;
+        /* 第2/6的高度 */
+        bottom: 3%;
+        /* 第3/6的高度 */
+        left: 3%;
+        /* 9/14的宽度 */
+        right: 3%;
+        width: 94%;
+        height: 92%;
+    }
+
+    #description {
+        position: absolute;
+        background-color: rgba(179, 191, 185, 0.5);
+        top: 87%;
+        /* 第2/6的高度 */
+        bottom: 3%;
+        /* 第3/6的高度 */
+        left: 5%;
+        /* 9/14的宽度 */
+        right: 53%;
+        display: flex;
+        /* 将这个容器设置为flex布局 */
+        align-items: center;
+        justify-content: space-around;
+        /* 垂直居中 */
+
+    }
+
+    .discription {
+        position: absolute;
+        background-color: rgba(179, 191, 185, 0.7);
+        color: black;
+        font-weight: 550;
+        /* text-indent: 2em; */
+        font-size: 19px;
+        /* line-height: 30px; */
+        font-family: '正楷体';
+        left: 53%;
+        right: 15%;
+        /* z-index: 2; */
+        top: 87%;
+        bottom: 3%;
+        /* padding-top: 10px; */
+        padding-left: 10px;
+    }
+
+    .classcircle {
+        width: 40px;
+        /* 圆的宽度 */
+        height: 40px;
+        /* 圆的高度 */
+        background-color: #ba794d;
+        /* 圆的填充颜色 */
+        border: 3px solid grey;
+        /* 圆的边框颜色和宽度 */
+        border-radius: 50%;
+        /* 圆角半径为50%，这使得元素形成圆形 */
+        margin: 20px;
+        /* 外边距，可选 */
+        display: flex;
+        /* 将这个容器设置为flex布局 */
+        align-items: center;
+        /* 垂直居中 */
+        justify-content: center;
+        font-family: '正楷体';
+        color: white;
+    }
+
+    #circle2 {
+        background-color: #607460;
+    }
+
+    #circle3 {
+        background-color: #134857;
+    }
+
+    #circle4 {
+        background-color: #464e65;
+    }
+
+    #circle5 {
+        background-color: #c08eaf;
+    }
+
+    #circle6 {
+        background-color: #b9dec9;
+    }
+
+    #myButton {
+        padding: 3px 8px;
+        /* 内边距 */
+        margin-bottom: 20px;
+        /* 外边距 */
+        border: none;
+        /* 移除边框 */
+        border-radius: 5px;
+        /* 边框圆角 */
+        background-color: #ee3f4d;
+        /* 背景色 */
+        color: white;
+        /* 文字颜色 */
+        font-family: Arial, sans-serif;
+        /* 字体 */
+        cursor: pointer;
+        /* 鼠标样式 */
+        transition: background-color 0.3s;
+        /* 过渡效果 */
+    }
+
+    #myButton:hover {
+        background-color: #a61b29;
+        /* 改变背景色 */
+    }
+</style>
+
+
+
+
+<body>
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div class="map_Section">
+
+
+        <div id="map">
+            <svg id="myForceGraph2" style="width: 570px;height: 530px;"></svg>
+        </div>
+
+        <div class="right">
+            <div id="queryNew" style="
+                                    display: flex;
+                                    /* 将这个容器设置为flex布局 */
+                                    align-items: center;
+                                    justify-content: space-around;">
+                <input type="text" id="queryName" placeholder="查询人物"
+                    style="margin-bottom: 20px; width: 15%;padding: 5px;"></input>
+                <input type="text" id="queryDynasty" placeholder="查询朝代"
+                    style="margin-bottom: 20px; width: 15%;padding: 5px;"></input>
+                <input type="text" id="queryGenre" placeholder="查询文体"
+                    style="margin-bottom: 20px; width: 15%;padding: 5px; "></input>
+                <input type="text" id="queryLocation" placeholder="查询地点"
+                    style="margin-bottom: 20px; width: 15%;padding: 5px;"></input>
+                <button type="primary" id="myButton">搜索
+                </button>
+
+                <svg id="myForceGraph" style="width: 570px;height: 530px;"></svg>
+            </div>
+        </div>
+    </div>
+
+    <div id="description">
+        <!-- <p>知识图谱图例：</p> -->
+        <div class="classcircle" id="circle1">诗人</div>
+        <div class="classcircle" id="circle2">文体</div>
+        <div class="classcircle" id="circle3">人物</div>
+        <div class="classcircle" id="circle4">作品</div>
+        <div class="classcircle" id="circle5">朝代</div>
+        <div class="classcircle" id="circle6">地点</div>
+    </div>
+
+    <button class="image-button" id="reButton1"></button>
+    <div class="discription">
+        <p>左侧为特定诗人的相关任务、地点、作品、朝代、文体；右侧为金陵最有代表性的几个诗人间的关系。</p>
+    </div>
+
+</body>
+<script type="text/javascript">
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // 获取ID为'myButton1'的按钮
+        var myButton1 = document.getElementById('reButton1');
+
+        // 添加点击事件监听器
+        myButton1.addEventListener('click', function () {
+            // 当按钮被点击时，跳转到 'page_base.html'
+            window.location.href = '/';
+        });
+    });
+
+
+    // 准备数据
+    let nodes1 = [{ 'id': 0, 'name': '李白', 'group': 1 }, { 'id': 1, 'name': '王友亮', 'group': 3 }, { 'id': 2, 'name': '清', 'group': 5 }, { 'id': 3, 'name': '诗', 'group': 6 }, { 'id': 4, 'name': '《金陵杂咏（选三首）》', 'group': 2 }, { 'id': 5, 'name': '落星墩', 'group': 4 }, { 'id': 6, 'name': '静海寺', 'group': 4 }, { 'id': 7, 'name': '姚坊门', 'group': 4 }, { 'id': 8, 'name': '唐', 'group': 5 }, { 'id': 9, 'name': '七言律诗', 'group': 6 }, { 'id': 10, 'name': '《登金陵凤凰台》', 'group': 2 }, { 'id': 11, 'name': '凤凰台', 'group': 4 }, { 'id': 12, 'name': '长江', 'group': 4 }, { 'id': 13, 'name': '吴宫', 'group': 4 }, { 'id': 14, 'name': '三山', 'group': 4 }, { 'id': 15, 'name': '秦淮河', 'group': 4 }, { 'id': 16, 'name': '长安', 'group': 4 }, { 'id': 17, 'name': '白鹭洲', 'group': 4 }, { 'id': 18, 'name': '李益', 'group': 3 }, { 'id': 19, 'name': '乐府诗', 'group': 6 }, { 'id': 20, 'name': '《长干行》', 'group': 2 }, { 'id': 21, 'name': '巴陵', 'group': 4 }, { 'id': 22, 'name': '扬子', 'group': 4 }, { 'id': 23, 'name': '湘潭', 'group': 4 }, { 'id': 24, 'name': '杨万里', 'group': 3 }, { 'id': 25, 'name': '宋', 'group': 5 }, { 'id': 26, 'name': '《登凤凰台》', 'group': 2 }, { 'id': 27, 'name': '王士禛', 'group': 3 }, { 'id': 28, 'name': '《秋柳》', 'group': 2 }, { 'id': 29, 'name': '不详', 'group': 4 }, { 'id': 30, 'name': '朱彝尊', 'group': 3 }, { 'id': 31, 'name': '词', 'group': 6 }, { 'id': 32, 'name': '《卖花声·雨花台》', 'group': 2 }, { 'id': 33, 'name': '白门', 'group': 4 }, { 'id': 34, 'name': '石头城', 'group': 4 }, { 'id': 35, 'name': '大小长干', 'group': 4 }, { 'id': 36, 'name': '雨花台', 'group': 4 }, { 'id': 37, 'name': '郑梦周', 'group': 3 }, { 'id': 38, 'name': '明', 'group': 5 }, { 'id': 39, 'name': '七言律绝', 'group': 6 }, { 'id': 40, 'name': '《舟次白鹭洲》', 'group': 2 }]
+    // 边集
+    let tempEdges1 = [{ 'id': 0, 'source': 4, 'target': 1, 'relation': '作者', 'value': 1 }, { 'id': 1, 'source': 4, 'target': 0, 'relation': '相关人物', 'value': 1 }, { 'id': 2, 'source': 4, 'target': 5, 'relation': '相关地点', 'value': 1 }, { 'id': 3, 'source': 4, 'target': 6, 'relation': '相关地点', 'value': 1 }, { 'id': 4, 'source': 4, 'target': 7, 'relation': '相关地点', 'value': 1 }, { 'id': 5, 'source': 4, 'target': 2, 'relation': '朝代', 'value': 1 }, { 'id': 6, 'source': 4, 'target': 3, 'relation': '文体', 'value': 1 }, { 'id': 7, 'source': 10, 'target': 0, 'relation': '作者', 'value': 1 }, { 'id': 8, 'source': 10, 'target': 0, 'relation': '相关人物', 'value': 1 }, { 'id': 9, 'source': 10, 'target': 11, 'relation': '相关地点', 'value': 1 }, { 'id': 10, 'source': 10, 'target': 12, 'relation': '相关地点', 'value': 1 }, { 'id': 11, 'source': 10, 'target': 13, 'relation': '相关地点', 'value': 1 }, { 'id': 12, 'source': 10, 'target': 14, 'relation': '相关地点', 'value': 1 }, { 'id': 13, 'source': 10, 'target': 15, 'relation': '相关地点', 'value': 1 }, { 'id': 14, 'source': 10, 'target': 16, 'relation': '相关地点', 'value': 1 }, { 'id': 15, 'source': 10, 'target': 17, 'relation': '相关地点', 'value': 1 }, { 'id': 16, 'source': 10, 'target': 8, 'relation': '朝代', 'value': 1 }, { 'id': 17, 'source': 10, 'target': 9, 'relation': '文体', 'value': 1 }, { 'id': 18, 'source': 20, 'target': 18, 'relation': '作者', 'value': 1 }, { 'id': 19, 'source': 20, 'target': 0, 'relation': '相关人物', 'value': 1 }, { 'id': 20, 'source': 20, 'target': 21, 'relation': '相关地点', 'value': 1 }, { 'id': 21, 'source': 20, 'target': 22, 'relation': '相关地点', 'value': 1 }, { 'id': 22, 'source': 20, 'target': 23, 'relation': '相关地点', 'value': 1 }, { 'id': 23, 'source': 20, 'target': 8, 'relation': '朝代', 'value': 1 }, { 'id': 24, 'source': 20, 'target': 19, 'relation': '文体', 'value': 1 }, { 'id': 25, 'source': 26, 'target': 24, 'relation': '作者', 'value': 1 }, { 'id': 26, 'source': 26, 'target': 0, 'relation': '相关人物', 'value': 1 }, { 'id': 27, 'source': 26, 'target': 11, 'relation': '相关地点', 'value': 1 }, { 'id': 28, 'source': 26, 'target': 25, 'relation': '朝代', 'value': 1 }, { 'id': 29, 'source': 26, 'target': 9, 'relation': '文体', 'value': 1 }, { 'id': 30, 'source': 28, 'target': 27, 'relation': '作者', 'value': 1 }, { 'id': 31, 'source': 28, 'target': 0, 'relation': '相关人物', 'value': 1 }, { 'id': 32, 'source': 28, 'target': 29, 'relation': '相关地点', 'value': 1 }, { 'id': 33, 'source': 28, 'target': 2, 'relation': '朝代', 'value': 1 }, { 'id': 34, 'source': 28, 'target': 9, 'relation': '文体', 'value': 1 }, { 'id': 35, 'source': 32, 'target': 30, 'relation': '作者', 'value': 1 }, { 'id': 36, 'source': 32, 'target': 0, 'relation': '相关人物', 'value': 1 }, { 'id': 37, 'source': 32, 'target': 33, 'relation': '相关地点', 'value': 1 }, { 'id': 38, 'source': 32, 'target': 34, 'relation': '相关地点', 'value': 1 }, { 'id': 39, 'source': 32, 'target': 35, 'relation': '相关地点', 'value': 1 }, { 'id': 40, 'source': 32, 'target': 36, 'relation': '相关地点', 'value': 1 }, { 'id': 41, 'source': 32, 'target': 2, 'relation': '朝代', 'value': 1 }, { 'id': 42, 'source': 32, 'target': 31, 'relation': '文体', 'value': 1 }, { 'id': 43, 'source': 40, 'target': 37, 'relation': '作者', 'value': 1 }, { 'id': 44, 'source': 40, 'target': 0, 'relation': '相关人物', 'value': 1 }, { 'id': 45, 'source': 40, 'target': 17, 'relation': '相关地点', 'value': 1 }, { 'id': 46, 'source': 40, 'target': 38, 'relation': '朝代', 'value': 1 }, { 'id': 47, 'source': 40, 'target': 39, 'relation': '文体', 'value': 1 }]
+
+    document.getElementById('myButton').addEventListener('click', function () {
+        // Collect input values
+        var queryName = document.getElementById('queryName').value;
+        var queryDynasty = document.getElementById('queryDynasty').value;
+        var queryGenre = document.getElementById('queryGenre').value;
+        var queryLocation = document.getElementById('queryLocation').value;
+
+        // Create an object to hold the input data
+        var inputData = {
+            character: queryName,
+            dynasty: queryDynasty,
+            literary_style: queryGenre,
+            location: queryLocation
+        };
+
+        // Send a POST request to the Flask back end with the input data
+        fetch('/process_request', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(inputData)
+        })
+            .then(response => response.json())
+            .then(result => {
+                //destroyForceDirectedGraph('#myForceGraph');
+                var node = JSON.parse(result['node']);
+                var relation = JSON.parse(result['relation']);
+                //destroyForceDirectedGraph('#myForceGraph');
+                nodes1 = node
+                //console.log(nodes1);
+                nodes1 = nodes1.map(function (item) {
+                    return { 'id': item.id, 'name': item.name.replace(/"/g, "'"), 'group': item.group };
+                });
+                tempEdges1 = relation
+                tempEdges1 = tempEdges1.map(function (item) {
+                    return { 'id': item.id, 'source': item.source, 'target': item.target, 'relation': item.relation.replace(/"/g, "'"), 'value': item.value };
+                });
+
+                let currentDataSet = 1;
+                let marge = { top: 60, bottom: 60, left: 60, right: 60 }
+                // 全局变量来存储力模拟
+                let forceSimulation;
+                //上面是函数外的代码
+
+                let SVGOptions = {
+                    marge, currentDataSet, // 假设我们想使用第二个数据集
+                    nodes1,
+                    tempEdges1,
+                };
+                destroyForceDirectedGraph('#myForceGraph');
+                createForceDirectedGraph('#myForceGraph', SVGOptions);
+            })
+            .catch(error => console.error('Error:', error));
+    });
+    // 节点集
+    let nodes2 = [
+        { id: 1, name: '湖南邵阳', group: 1 },
+        { id: 2, name: '山东泰安', group: 2 },
+        { id: 3, name: '广东阳江', group: 3 },
+        { id: 4, name: '山西太原', group: 4 },
+        { id: 5, name: '亮', group: 5 },
+        { id: 6, name: '丽', group: 1 },
+        { id: 7, name: '雪', group: 2 },
+        { id: 8, name: '小明', group: 3 },
+        { id: 9, name: '组长', group: 4 }
+    ]
+
+    // 边集
+    let tempEdges2 = [
+        { id: 1, source: 1, target: 5, relation: '籍贯', value: 1.3 },
+        { id: 2, source: 5, target: 6, relation: '舍友', value: 1 },
+        { id: 3, source: 5, target: 7, relation: '舍友', value: 1 },
+        { id: 4, source: 5, target: 8, relation: '舍友', value: 1 },
+        { id: 5, source: 2, target: 7, relation: '籍贯', value: 2 },
+        { id: 6, source: 3, target: 6, relation: '籍贯', value: 0.9 },
+        { id: 7, source: 4, target: 8, relation: '籍贯', value: 1 },
+        { id: 8, source: 6, target: 7, relation: '同学', value: 1.6 },
+        { id: 9, source: 7, target: 8, relation: '朋友', value: 0.7 },
+        { id: 10, source: 7, target: 9, relation: '职责', value: 2 },
+        { id: 11, source: 9, target: 7, relation: '人物', value: 2 },
+        { id: 12, source: 9, target: 7, relation: '哈哈哈', value: 2 }
+    ]
+
+    let nodes3 = [
+        { id: 0, name: '焦竑', group: 8 },
+        { id: 1, name: '李贽', group: 8 },
+        { id: 2, name: '解缙', group: 8 },
+        { id: 3, name: '朱元璋', group: 8 },
+        { id: 4, name: '高启', group: 8 },
+        { id: 5, name: '李白', group: 5 },
+        { id: 6, name: '刘禹锡', group: 5 },
+        { id: 7, name: '王安石', group: 6 },
+        { id: 8, name: '盛时泰', group: 8 },
+        { id: 9, name: '王世贞', group: 8 },
+        { id: 10, name: '李煜', group: 4 },
+        { id: 11, name: '徐铉', group: 4 },
+        { id: 12, name: '杜牧', group: 5 },
+        { id: 13, name: '宋濂', group: 8 },
+        { id: 14, name: '陶弘景', group: 3 },
+        { id: 15, name: '王羲之', group: 2 },
+        { id: 16, name: '朱彝尊', group: 9 },
+        { id: 17, name: '苏轼', group: 6 },
+        { id: 18, name: '谢脁', group: 3 },
+        { id: 19, name: '谢安', group: 2 },
+
+
+    ]
+    // 边集
+    let tempEdges3 = [
+        { id: 0, source: 1, target: 6, relation: "《读刘禹锡金陵怀古》", value: 2 },
+        { id: 1, source: 10, target: 7, relation: "《胭脂井》", value: 1 },
+        { id: 2, source: 5, target: 9, relation: "《弇州山人续稿》", value: 2 },
+        { id: 3, source: 9, target: 8, relation: "《两都赋》", value: 1 },
+        { id: 4, source: 6, target: 7, relation: "《湖田疏》", value: 2 },
+        { id: 5, source: 7, target: 5, relation: "《金陵三首》", value: 2 },
+        { id: 6, source: 3, target: 4, relation: "《登金陵雨花台望大江》", value: 1 },
+        { id: 7, source: 6, target: 5, relation: "《金陵酒肆留别》", value: 2 },
+        { id: 8, source: 6, target: 1, relation: "《读刘禹锡金陵怀古》", value: 1 },
+        { id: 9, source: 10, target: 6, relation: "《江令宅》", value: 1 },
+        { id: 10, source: 0, target: 1, relation: "《初潭集》", value: 2 },
+        { id: 11, source: 11, target: 10, relation: "《吴王李煜墓志铭》", value: 2 },
+        { id: 12, source: 3, target: 13, relation: "《游钟山记》", value: 2 },
+        { id: 13, source: 10, target: 12, relation: "《金谷园》", value: 1 },
+        { id: 14, source: 3, target: 2, relation: "《大庖西封事》", value: 2 },
+        { id: 15, source: 6, target: 12, relation: "《台城》", value: 2 },
+        { id: 16, source: 14, target: 15, relation: "《与梁武帝论书启》", value: 2 },
+        { id: 17, source: 16, target: 5, relation: "《卖花声·雨花台》", value: 2 },
+        { id: 18, source: 16, target: 6, relation: "《卖花声·雨花台》", value: 2 },
+        { id: 19, source: 16, target: 6, relation: "《满江红·吴大帝庙》", value: 2 },
+        { id: 20, source: 16, target: 17, relation: "《满江红·吴大帝庙》", value: 2 },
+        { id: 21, source: 17, target: 6, relation: "《赴岭表过金陵蒋山泉老召食阻雨不及往》", value: 2 },
+        { id: 22, source: 17, target: 7, relation: "《渔家傲（千古龙蟠并虎踞）》", value: 2 },
+        { id: 23, source: 7, target: 17, relation: "《字说》", value: 2 },
+        { id: 24, source: 16, target: 7, relation: "《卖花声·雨花台》", value: 2 },
+        { id: 25, source: 5, target: 15, relation: "《登金陵冶城西北谢安墩》", value: 2 },
+        { id: 26, source: 14, target: 15, relation: "《与梁武帝论书启》", value: 2 },
+        { id: 27, source: 5, target: 18, relation: "《新林浦阻风寄友人》", value: 2 },
+        { id: 28, source: 18, target: 15, relation: "《观朝雨》", value: 2 },
+        { id: 29, source: 5, target: 19, relation: "《登梅岗望金陵，赠族侄高座寺僧中孚》", value: 2 },
+        { id: 30, source: 19, target: 15, relation: "《兰亭诗二首》", value: 2 },
+    ]
+
+    let nodes, tempEdges;
+    let currentDataSet = 1;
+    let marge = { top: 60, bottom: 60, left: 60, right: 60 }
+    // 全局变量来存储力模拟
+    let forceSimulation;
+    let forceSimulation2;
+    //上面是函数外的代码
+
+    let SVGOptions = {
+        marge, currentDataSet, // 假设我们想使用第二个数据集
+        nodes1,
+        tempEdges1,
+        nodes2,
+        tempEdges2,
+    };
+
+    let SVGOptions2 = {
+        marge, currentDataSet, // 假设我们想使用第二个数据集
+        // nodes3,
+        // tempEdges3,
+        nodes2,
+        tempEdges2,
+    };
+    // 添加 nodes1，其值与原来的 nodes3 相同
+    SVGOptions2.nodes1 = nodes3;
+    SVGOptions2.tempEdges1 = tempEdges3;
+
+    createForceDirectedGraph2('#myForceGraph2', SVGOptions2);
+    createForceDirectedGraph('#myForceGraph', SVGOptions);
+
+
+    function changeGraph() {
+        // 切换数据集
+        currentDataSet = currentDataSet === 1 ? 2 : 1;
+
+        // 更新选项对象
+        let tempOptionSVG = {
+            marge,
+            currentDataSet, // 更新当前数据集
+            nodes1,
+            tempEdges1,
+            nodes2,
+            tempEdges2,
+        };
+
+        // 先销毁现有的图谱
+        destroyForceDirectedGraph('#myForceGraph');
+
+        // 创建新的图谱
+        createForceDirectedGraph('#myForceGraph', tempOptionSVG);
+    }
+
+
+    function destroyForceDirectedGraph(selector) {
+        // 停止力模拟
+        if (forceSimulation) {
+            forceSimulation.stop();
+        }
+
+        // 移除SVG容器
+        let svg = d3.select(selector);
+        if (!svg.empty()) {
+            svg.selectAll('*').remove(); // 这样可以确保移除所有的子元素
+            console.log('Knowledge graph destroyed.');
+        } else {
+            console.log('No knowledge graph to destroy.');
+        }
+    }
+
+    function createForceDirectedGraph(selector, options) {
+
+        if (options.currentDataSet === 1) {
+            nodes = options.nodes1;
+            tempEdges = options.tempEdges1;
+        } else {
+            nodes = options.nodes2;
+            tempEdges = options.tempEdges2;
+        }
+
+        let svg = d3.select(selector);
+        let width = svg.attr('width')
+        let height = svg.attr('height')
+        svg.call(
+            d3.zoom().on('zoom', function () {
+                g.attr('transform', d3.event.transform)
+            })
+        )
+            .on('dblclick.zoom', null)
+        let g = svg.append('g')
+            .attr('transform', 'translate(' + options.marge.top + ',' + options.marge.left + ')')
+            .attr('class', 'container');
+
+        nodes.forEach(item => {
+
+        })
+        // 生成 nodes map
+        let nodesMap = genNodesMap(nodes);
+        console.log('3333', nodesMap)
+        nodesData = d3.values(nodesMap)
+        let linkMap = genLinkMap(tempEdges)
+        // 构建 links（source 属性必须从 0 开始）
+        edges = genLinks(tempEdges);
+        console.log('123123', edges, nodesData)
+        // 设置一个颜色比例尺
+        let colorScale = d3.scaleOrdinal()
+            .domain(d3.range(nodesData.length))
+            .range(d3.schemeCategory10)
+        // 新建一个力导向图
+
+        forceSimulation = d3.forceSimulation()
+            .force('link', d3.forceLink().links(edges))
+            .force('charge', d3.forceManyBody().strength(function (a) {
+                // 默认斥力
+                let strength = -10;
+
+                nodes.forEach(b => {
+                    if (a !== b) {
+                        // 检查a和b之间是否有连接
+                        const connected = isConnected(a, b);
+
+                        // 根据连接状态和group属性调整斥力
+                        if (connected && (a.group === 1 || b.group === 1)) {
+                            strength = -10; // 与group为1的节点有连接
+                        } else if (!connected && (a.group === 1 || b.group === 1)) {
+                            strength = -100; // 与group为1的节点无连接
+                        }
+                    }
+                });
+
+                return strength;
+            }))
+            .force('center', d3.forceCenter(width / 2, height / 2));
+
+        function isConnected(a, b) {
+            return edges.some(edge => (edge.source === a && edge.target === b) || (edge.source === b && edge.target === a));
+        }
+
+        // 检查节点是否与group为1的节点有连接
+        function isConnectedToGroup1(node) {
+            return edges.some(edge => (edge.source.id === node.id || edge.target.id === node.id) && (edge.source.group === 1 || edge.target.group === 1));
+        }
+        // 生成节点数据
+        forceSimulation.nodes(nodesData)
+        // 生成边数据
+        forceSimulation.force('link')
+            .links(edges)
+            .distance(function (d) { // 每一边的长度
+                return d.value * 150
+            })
+        // 设置图形中心位置
+        forceSimulation.force('center')
+            .x(230)
+            .y(200)
+        // 箭头
+        var marker = g.append('g').attr('class', 'showLine').append('marker')
+            .attr('id', 'resolved')
+            // .attr("markerUnits","strokeWidth")// 设置为strokeWidth箭头会随着线的粗细发生变化
+            .attr('markerUnits', 'userSpaceOnUse')
+            .attr('viewBox', '0 -5 10 10')// 坐标系的区域
+            .attr('refX', 0)// 箭头坐标
+            .attr('refY', 0)
+            .attr('markerWidth', 10)// 标识的大小
+            .attr('markerHeight', 10)
+            .attr('orient', 'auto')// 绘制方向，可设定为：auto（自动确认方向）和 角度值
+            .attr('stroke-width', 2)// 箭头宽度
+            .append('path')
+            .attr('d', 'M0,-5L10,0L0,5')// 箭头的路径
+            .attr('fill', '#000000')// 箭头颜色
+
+        // 绘制边
+        let links = g.append('g').selectAll('path')
+            .data(edges)
+            .enter()
+            .append('path')
+            .attr('d', link => genLinkPath(link)) // 遍历所有数据。d表示当前遍历到的数据，返回绘制的贝塞尔曲线
+            .attr('id', (d, i) => { return 'edgepath' + d.id }) // 设置id，用于连线文字
+            .style('stroke', '#000') // 颜色
+            .style('stroke-width', 2) // 粗细
+            .attr('class', 'lines')
+            .attr('marker-end', 'url(#resolved)') // 根据箭头标记的id号标记箭头
+        // 边上的文字
+        let linksText = g.append('g')
+            .selectAll('text')
+            .data(edges)
+            .enter()
+            .append('text')
+            .attr('class', 'linksText')
+
+            .text(function (d) {
+                return d.relations
+            })
+            .style('font-size', 18)
+            .attr('fill-opacity', 0)
+
+        // 创建分组
+        let gs = g.append('g')
+            .selectAll('.circleText')
+            .data(nodesData)
+            .enter()
+            .append('g')
+            .attr('class', 'singleNode')
+            .attr('id', function (d) {
+                return 'singleNode' + d.id
+            })
+            .style('cursor', 'pointer')
+            .attr('transform', function (d) {
+                let cirX = d.x
+                let cirY = d.y
+                return 'translate(' + cirX + ',' + cirY + ')'
+            })
+        // 鼠标交互
+        gs.on('mouseover', function (d, i) {
+            // 显示连接线上的文字
+            toggleLineText(d, true)
+            toggleLine(links, d, true)
+            toggleNode(gs, d, true)
+        })
+            .on('mouseout', function (d, i) {
+                // 隐去连接线上的文字
+                toggleLineText(d, false)
+                toggleLine(links, d, false)
+                toggleNode(gs, d, false)
+            })
+            .on('click', function (d, i) {
+                linksText.style('fill-opacity', function (edge) {
+                    if (edge.source === d) {
+                        return 1
+                    }
+                })
+                toggleCircle(d3.select(this), d)
+            }, true)
+            .call(d3.drag()
+                .on('start', started)
+                .on('drag', dragged)
+                .on('end', ended)
+            )
+        svg.on('click', function () {
+            nodes.forEach(d => d.clickFlag = false)
+            var event = d3.event
+            var target = event.srcElement,   //  获取事件发生源
+                data = d3.select(target).datum(); //  获取事件发生源的数据
+            removeSingle()
+            if (!data) {
+                document.getElementById('xxx').innerText = ''
+            }
+        }, true)
+        forceSimulation.on('tick', ticked)
+        function toggleLineText(currNode, isHover) {
+            if (isHover) {
+                linksText.style('fill-opacity', function (edge) {
+                    // 修改这里来包括当当前节点是连接线的目标时
+                    if (edge.source === currNode || edge.target === currNode) {
+                        return 1;
+                    }
+                });
+            } else {
+                linksText.style('fill-opacity', function (edge) {
+                    if (edge.source === currNode || edge.target === currNode) {
+                        return 0;
+                    }
+                });
+            }
+        }
+        function toggleLine(linkLine, currNode, isHover) {
+            if (isHover) {
+                // 加重连线样式
+                links
+                    .style('opacity', 0.1)
+                    .filter(link => isLinkLine(currNode, link))
+                    .style('opacity', 1)
+                    .classed('link-active', true)
+            } else {
+                links
+                    .style('opacity', 1)
+                    .classed('link-active', false)
+            }
+        }
+        function showMyList() {
+            var e = { id: 10, name: "河北" };
+            var h = { id: 11, name: "河南" };
+            var f = { id: 13, source: 9, target: 10, relation: '222', value: 2 };
+            nodes.push(e);
+            nodes.push(h);
+            tempEdges.push(f);
+            nodesMap = genNodesMap(nodes);
+            nodesData = d3.values(nodesMap)
+            linkMap = genLinkMap(tempEdges)
+            edges = genLinks(tempEdges)
+            updateData()
+        }
+        function updateData() {
+            links = links
+                .data(edges, function (d) {
+                })
+                .join("path")
+                .attr('id', (d, i) => { return 'edgepath' + d.id }) // 设置id，用于连线文字
+                .style('stroke', '#000') // 颜色
+                .style('stroke-width', 2) // 粗细
+                .attr('class', 'lines')
+                .attr('marker-end', 'url(#resolved)') // 根据箭头标记的id号标记箭头
+                .merge(links);
+            linksText = linksText
+                .data(edges)
+                .join('text')
+                .attr('class', 'linksText')
+                .text(function (d) {
+                    return d.relations
+                })
+                .style('font-size', 14)
+                .style('font-family', '生肖体')  // 设置字体为行楷
+                .attr('fill-opacity', 0)
+            gs = gs
+                .data(nodesData, function (d) {
+                })
+                .join("g")
+                .attr('class', 'singleNode')
+                .attr('id', function (d) {
+                    return 'singleNode' + d.id
+                })
+                .style('cursor', 'pointer')
+                .merge(gs)
+                .call(d3.drag()
+                    .on("start", started)
+                    .on("drag", dragged)
+                    .on("end", ended));
+            gs.append('circle')
+                .attr('fill', function (d) {
+                    return 'orange'
+                })
+                .attr('r', 35)
+                .attr('stroke', 'grey')
+                .attr('stroke-width', 3)
+            gs.on('mouseover', function (d, i) {
+                // 显示连接线上的文字
+                toggleLineText(d, true)
+                toggleLine(links, d, true)
+                toggleNode(gs, d, true)
+            })
+                .on('mouseout', function (d, i) {
+                    // 隐去连接线上的文字
+                    toggleLineText(d, false)
+                    toggleLine(links, d, false)
+                    toggleNode(gs, d, false)
+                })
+                .on('click', function (d, i) {
+                    linksText.style('fill-opacity', function (edge) {
+                        if (edge.source === d) {
+                            return 1
+                        }
+                    })
+                    toggleCircle(d3.select(this), d)
+                }, true)
+            gs.append('text')
+                .attr('y', -20)
+                .attr('dy', 10)
+                .attr('text-anchor', 'middle')
+                .style('font-size', 12)
+                .style('font-family', 'STKaiti')  // 设置字体为行楷
+                .attr('x', function ({ name }) {
+                    return textBreaking(d3.select(this), name)
+                })
+            gs.append('title')
+                .text((node) => {
+                    return node.name
+                })
+            forceSimulation.nodes(nodesData);
+            forceSimulation.force("link").links(edges);
+            forceSimulation.alpha(0.8).restart();
+        }
+        function getLineTextAngle(d, bbox) {
+            if (d.target.x < d.source.x) {
+                const {
+                    x,
+                    y,
+                    width,
+                    height
+                } = bbox;
+                const rx = x + width / 2;
+                const ry = y + height / 2;
+                return 'rotate(180 ' + rx + ' ' + ry + ')';
+            } else {
+                return 'rotate(0)';
+            }
+        }
+        function toggleNode(nodeCircle, currNode, isHover) {
+            if (isHover) {
+                // 提升节点层级
+                // nodeCircle.sort((a, b) => a.id === currNode.id ? 1 : -1);
+                // this.parentNode.appendChild(this);
+                nodeCircle
+                    .style('opacity', .1)
+                    .filter(node => isLinkNode(currNode, node))
+                    .style('opacity', 1);
+
+            } else {
+                nodeCircle.style('opacity', 1);
+            }
+
+        }
+        function removeSingle() {
+            d3.select('.singleCircle').remove()
+        }
+        function toggleCircle(current, d) {
+            var currentD = d
+            if (d.clickFlag) {
+                removeSingle()
+                document.getElementById('xxx').innerText = ''
+            }
+            d.clickFlag = true
+            document.getElementById('xxx').innerText = d.name
+            var data = [{
+                population: 30,
+                value: 'X',
+                type: 'delete'
+            }, {
+                population: 30,
+                value: '收起',
+                type: 'showOn'
+            }, {
+                population: 30,
+                value: '展开',
+                type: 'showOff'
+            }]
+            var sum = d3.sum(data.map(function (d) {
+                return d.population
+            }))
+            for (i in data) {
+                data[i].Percentage = (data[i].population / sum * 100).toFixed(0) + "%";
+            }
+            var width = 300,
+                height = 300,
+                margin = { "left": 30, "top": 30, "right": 30, "bottom": 30 },
+                svg_width = width + margin.left + margin.right,
+                svg_height = height + margin.top + margin.bottom,
+                font_size = 15;
+            var g = current
+                .append("g")
+                .attr('class', 'singleCircle')
+                .attr("width", width)
+                .attr("height", height)
+            var Pie = g.append("g")
+
+            var arc_generator = d3.arc()
+                .innerRadius(width / 6.5)
+                .outerRadius(width / 4)
+            var angle_data = d3.pie()
+                .value(function (d) {
+                    return d.population;
+                })
+            var pieData = angle_data(data)
+            var pieAngle = pieData.map(function (p) {
+                return (p.startAngle + p.endAngle) / 2 / Math.PI * 180;
+            });
+
+
+            //生成内部圆环
+            Pie.selectAll("path")
+                .data(angle_data(data))
+                .enter()
+                .append("path")
+                .attr("d", arc_generator)
+                .style("fill", function (d, i) {
+                    return 'grey';
+                })
+                .style('stroke', 'black')
+                .attr("class", "path")
+                .attr('type', function (d) {
+                    return d.data.type
+                })
+                .on('click', function (d) {
+                    if (d.data.type === 'delete') {
+                        deleteNode(currentD)
+                    } else if (d.data.type === 'showOn') {
+                        deleteNextNodes(currentD)
+                    } else {
+                        // showMyList()
+                    }
+                    d3.event.stopPropagation()
+                })
+            var arc_label = d3.arc()
+                .innerRadius(width / 4)
+                .outerRadius(width / 2)
+
+            Pie.selectAll(".arc_label")
+                .data(angle_data(data))
+                .enter()
+                .append("path")
+                .attr("d", arc_label)
+                .attr("class", "arc_label")
+                .style("fill", "none")
+            const labelFontSize = 12;
+            const labelValRadius = (170 * 0.35 - labelFontSize * 0.35); // 计算正确半径 文字位置
+            const labelValRadius1 = (170 * 0.35 + labelFontSize * 0.35);
+
+
+            const labelsVals = current.select('.singleCircle').append('g')
+                .classed('labelsvals', true);
+
+            // 定义两条路径以使标签的方向正确
+            labelsVals.append('def')
+                .append('path')
+                .attr('id', 'label-path-1')
+                .attr('d', `m0 ${-labelValRadius} a${labelValRadius} ${labelValRadius} 0 1,1 -0.01 0`);
+            labelsVals.append('def')
+                .append('path')
+                .attr('id', 'label-path-2')
+                .attr('d', `m0 ${-labelValRadius1} a${labelValRadius1} ${labelValRadius1} 0 1,0 0.01 0`);
+
+            labelsVals.selectAll('text')
+                .data(data)
+                .enter()
+                .append('text')
+                .style('font-size', labelFontSize)
+                .style('font-family', 'STKaiti')  // 设置字体为行楷
+                .style('fill', 'black')
+                .style('font-weight', "bold")
+                .style('text-anchor', 'middle')
+                .append('textPath')
+                .attr('href', function (d, i) {
+                    const p = pieData[i];
+                    const angle = pieAngle[i];
+                    if (angle > 90 && angle <= 270) { // 根据角度选择路径
+                        return '#label-path-2';
+                    } else {
+                        return '#label-path-1';
+                    }
+                })
+                .attr('startOffset', function (d, i) {
+                    const p = pieData[i];
+                    const angle = pieAngle[i];
+                    let percent = (p.startAngle + p.endAngle) / 2 / 2 / Math.PI * 100;
+                    if (angle > 90 && angle <= 270) { // 分别计算每条路径的正确百分比
+                        return 100 - percent + "%";
+                    }
+                    return percent + "%";
+                })
+                .text(function (d) {
+                    return d.value;
+                })
+                .on('click', function (d) {
+                    if (d.type === 'delete') {
+                        deleteNode(currentD)
+                    } else if (d.type === 'showOn') {
+                        deleteNextNodes(currentD)
+                    } else {
+                        // showMyList()
+                    }
+                    d3.event.stopPropagation()
+                }, true)
+        }
+        //删除当前节点下一级没有其他关系的节点
+        function deleteNextNodes(curr) {
+            document.getElementById('xxx').innerText = '';
+            // var removeIndex = nodesData.findIndex(node=>node.id == curr.id)
+            // nodesData.splice(removeIndex,1)
+            // nodes.splice(removeIndex,1)
+            d3.select(this).remove();
+            let relationNode = [],
+                relationList = [],
+                hasRelationList = []
+            var clickNode = curr.id;//点击节点的名字
+            d3.selectAll(".lines").each(function (e) {
+                if (e.source.id == curr.id || e.target.id == curr.id) {
+                    hasRelationList.push(e)
+                } else {
+                    relationList.push(e)//出去跟删除节点有关系的其他关系
+                }
+                //需要删除的节点相关的节点
+                if (e.source.id == curr.id) {
+                    relationNode.push(e.target)
+                }
+                //需要删除的节点相关的节点
+                if (e.target.id == curr.id) {
+                    relationNode.push(e.source)
+                }
+            })
+            var tempNodeList = JSON.parse(JSON.stringify(relationNode))
+            tempNodeList = uniqObjInArray(tempNodeList)
+            //区分下级节点是否是孤节点
+            tempNodeList.forEach(function (item, index) {
+                var hasLine = relationList.findIndex(jtem => jtem.target.id == item.id || jtem.source.id == item.id)
+                if (hasLine >= 0) {
+                    item.notSingle = true
+                }
+            })
+            tempNodeList.forEach(function (item, index) {
+                if (!item.notSingle) {
+                    d3.select('#singleNode' + item.id).remove()
+                }
+            })
+            var otherTempNode = [];
+            tempNodeList = tempNodeList.map(item => {
+                if (!item.notSingle) {
+                    otherTempNode.push(item)
+                }
+            })
+            hasRelationList.forEach(item => {
+                otherTempNode.forEach(jtem => {
+                    if (jtem.id == item.source.id || jtem.id == item.target.id) {
+                        d3.select('#edgepath' + item.id).remove()
+                    }
+                })
+            })
+            d3.selectAll(".singleNode").each(function (d, i) {
+                var temp = d.id;
+                //删除当前需要隐藏的节点
+                if (temp == clickNode) {
+                    removeSingle()
+                }
+            });
+            d3.selectAll(".linksText").each(function (e) {
+                if (e.source === curr || e.target === curr) {
+                    d3.select(this).remove();
+                }
+            })
+            gs.style('opacity', 1);
+            links.style('opacity', 1)
+                .classed('link-active', false);
+        }
+        //删除当前及下一级没有其他关系的节点
+        function deleteNode(curr) {
+            document.getElementById('xxx').innerText = '';
+            var removeIndex = nodesData.findIndex(node => node.id == curr.id)
+            nodesData.splice(removeIndex, 1)
+            nodes.splice(removeIndex, 1)
+            d3.select(this).remove();
+            let relationNode = [],
+                relationList = []
+            var clickNode = curr.id;//点击节点的名字
+            d3.selectAll(".lines").each(function (e) {
+                if (e.source.id == curr.id || e.target.id == curr.id) {
+                    d3.select(this).remove();
+                } else {
+                    relationList.push(e)//出去跟删除节点有关系的其他关系
+                }
+                //需要删除的节点相关的节点
+                if (e.source.id == curr.id) {
+                    relationNode.push(e.target)
+                }
+                //需要删除的节点相关的节点
+                if (e.target.id == curr.id) {
+                    relationNode.push(e.source)
+                }
+            })
+            var tempNodeList = JSON.parse(JSON.stringify(relationNode))
+            tempNodeList = uniqObjInArray(tempNodeList)
+            //区分下级节点是否是孤节点
+            tempNodeList.forEach(function (item, index) {
+                var hasLine = relationList.findIndex(jtem => jtem.target.id == item.id || jtem.source.id == item.id)
+                if (hasLine >= 0) {
+                    item.notSingle = true
+                }
+            })
+            tempNodeList.forEach(function (item, index) {
+                if (!item.notSingle) {
+                    d3.select('#singleNode' + item.id).remove()
+                }
+            })
+            d3.selectAll(".singleNode").each(function (d, i) {
+                var temp = d.id;
+                //删除当前需要隐藏的节点
+                if (temp == clickNode) {
+                    removeSingle()
+                    d3.select(this).remove();
+                }
+            });
+            d3.selectAll(".linksText").each(function (e) {
+                if (e.source === curr || e.target === curr) {
+                    d3.select(this).remove();
+                }
+            })
+            gs.style('opacity', 1);
+            links.style('opacity', 1)
+                .classed('link-active', false);
+        }
+        // 关联节点去重重组
+        function uniqObjInArray(objarray) {
+            let len = objarray.length;
+            let tempJson = {
+
+            };
+            let res = [];
+            for (let i = 0; i < len; i++) {
+                //取出每一个对象
+                tempJson[JSON.stringify(objarray[i])] = true;
+            }
+            let keyItems = Object.keys(tempJson);
+            for (let j = 0; j < keyItems.length; j++) {
+                res.push(JSON.parse(keyItems[j]));
+            }
+            return res;
+        }
+        function isLinkLine(node, link) {
+            // 检查当前节点是否是连线的源节点或目标节点
+            return link.source.id === node.id || link.target.id === node.id;
+        }
+
+        function isLinkNode(currNode, node) {
+            if (currNode.id === node.id) {
+                return true;
+            }
+            return linkMap[currNode.id + '-' + node.id] || linkMap[node.id + '-' + currNode.id];
+        }
+        function largerNode(nodes, currNode, isHover) {
+            if (isHover) {
+                gs
+                    .style('stroke-width', 1)
+                    .filter(node => isNode(currNode, node))
+                    .style('stroke-width', 10)
+            } else {
+                gs
+                    .style('stroke-width', 1)
+            }
+        }
+        function isNode(node, cNode) {
+            return true
+        }
+
+        // 定义一个函数，根据 d.group 的值返回相应的颜色
+
+        function getNodeColor(group) {
+            const colors = ['#607460', '#7d1f33', '#ba794d', '#464e65', '#134857', '#b9dec9', '#c08eaf'];
+            return colors[(group + 1) % colors.length]; // 使用模运算符确保 group 值在颜色数组的范围内
+        }
+
+        // 绘制节点
+        gs.append('circle')
+            .attr('r', function (d) {
+                // 如果group为1，半径是70，否则是35
+                return d.group === 1 ? 25 : 25;
+            })
+            .attr('id', function (d) {
+                return 'circle' + d.id;
+            })
+            .attr('fill', d => getNodeColor(d.group))  // 使用 getNodeColor 函数设置填充颜色
+            .attr('stroke', 'grey')
+            .attr('stroke-width', 3);
+
+        // 文字
+        var nodeText = gs.append('text')
+            // .attr('x', -10)
+            .attr('y', -20)
+            .attr('dy', 10)
+            .attr('text-anchor', 'middle')
+            .style('font-size', '14px')
+            .style('fill', 'white')           // 设置文字颜色为白色
+            .style('font-family', '正楷体, 行楷,  生肖体, STKaiti, FangSong, serif')      // 设置字体为行楷
+            .attr('x', function ({ name }) {
+                return textBreaking(d3.select(this), name);
+            });
+        gs.append('title')
+            .text((node) => {
+                return node.name
+            })
+        function genLinkMap(relations) {
+            const hash = {};
+            relations.map(function ({
+                source,
+                target,
+                relation
+            }) {
+                const key = source + '-' + target;
+                if (hash[key]) {
+                    hash[key] += 1;
+                    hash[key + '-relation'] += '、' + relation;
+                } else {
+                    hash[key] = 1;
+                    hash[key + '-relation'] = relation;
+                }
+            });
+            return hash;
+        }
+        function genLinks(relations) {
+            const indexHash = {};
+            return relations.map(function ({
+                id,
+                source,
+                target,
+                relation,
+                value
+            }, i) {
+                const linkKey = source + '-' + target;
+                const count = linkMap[linkKey];
+                if (indexHash[linkKey]) {
+                    indexHash[linkKey] -= 1;
+                } else {
+                    indexHash[linkKey] = count - 1;
+                }
+                return {
+                    id,
+                    source: nodesMap[source],
+                    target: nodesMap[target],
+                    relation,
+                    value,
+                    relations: linkMap[linkKey + '-relation'],
+                    count: linkMap[linkKey],
+                    index: indexHash[linkKey]
+                }
+            })
+        }
+        // 生成关系连线路径
+        function genLinkPath(link) {
+            const count = link.count;
+            const index = link.index;
+            let sx = link.source.x;
+            let tx = link.target.x;
+            let sy = link.source.y;
+            let ty = link.target.y;
+            return 'M' + sx + ',' + sy + ' L' + tx + ',' + ty;
+        }
+        function genNodesMap(nodes) {
+            const hash = {};
+            nodes.map(function ({
+                id,
+                name,
+                group
+            }) {
+                hash[id] = {
+                    id,
+                    name,
+                    group
+                };
+            });
+            return hash;
+        }
+        // 处理节点文字换行
+        function textBreaking(d3text, text) {
+            const len = text.length
+            if (len <= 3) {
+                d3text.append('tspan')
+                    .attr('x', 0)
+                    .attr('y', -3)
+                    .text(text)
+            } else {
+                const topText = text.substring(0, 3)
+                const midText = text.substring(3, 7)
+                let botText = text.substring(7, len)
+                let topY = -22
+                let midY = 8
+                let botY = 34
+                if (len <= 9) {
+                    topY += 10
+                    midY += 10
+                } else {
+                    botText = text.substring(7, 9) + '...'
+                }
+                d3text.text('')
+                d3text.append('tspan')
+                    .attr('x', 0)
+                    .attr('y', topY)
+                    .text(function () {
+                        return topText
+                    })
+                d3text.append('tspan')
+                    .attr('x', 0)
+                    .attr('y', midY)
+                    .text(function () {
+                        return midText
+                    })
+                d3text.append('tspan')
+                    .attr('x', 0)
+                    .attr('y', botY - 7)
+                    .text(function () {
+                        return botText
+                    })
+            }
+        }
+        // ticked
+        function ticked() {
+            // 连线路径
+            links
+                .attr('d', link => genLinkPath(link))
+            // 连线文字位置
+            linksText
+                .attr('x', function (d) { return (d.source.x + d.target.x) / 2 })
+                .attr('y', function (d) { return (d.source.y + d.target.y) / 2 })
+            // 节点位置
+            gs.attr('transform', function (d) { return 'translate(' + d.x + ',' + d.y + ')' })
+            // 将group为1的圆移动到父元素的最后，使其始终置顶
+            gs.each(function (d) {
+                if (d.group === 1) {
+                    this.parentNode.appendChild(this);
+                }
+            });
+        }
+        // drag
+        function started(d) {
+            if (!d3.event.active) {
+                forceSimulation.alphaTarget(0.8).restart() // 设置衰减系数，对节点位置移动过程的模拟，数值越高移动越快，数值范围[0, 1]
+            }
+            d.fx = d.x
+            d.fy = d.y
+        }
+        function dragged(d) {
+            d.fx = d3.event.x
+            d.fy = d3.event.y
+        }
+        function ended(d) {
+            if (!d3.event.active) {
+                forceSimulation.alphaTarget(0)
+            }
+            d.fx = null
+            d.fy = null
+        }
+    }
+
+
+    function createForceDirectedGraph2(selector, options) {
+
+        if (options.currentDataSet === 1) {
+            nodes = options.nodes1;
+            tempEdges = options.tempEdges1;
+        } else {
+            nodes = options.nodes2;
+            tempEdges = options.tempEdges2;
+        }
+
+        let svg = d3.select(selector);
+        let width = svg.attr('width')
+        let height = svg.attr('height')
+        svg.call(
+            d3.zoom().on('zoom', function () {
+                g.attr('transform', d3.event.transform)
+            })
+        )
+            .on('dblclick.zoom', null)
+        let g = svg.append('g')
+            .attr('transform', 'translate(' + options.marge.top + ',' + options.marge.left + ')')
+            .attr('class', 'container');
+
+        nodes.forEach(item => {
+
+        })
+        // 生成 nodes map
+        let nodesMap = genNodesMap(nodes);
+        console.log('3333', nodesMap)
+        nodesData = d3.values(nodesMap)
+        let linkMap = genLinkMap(tempEdges)
+        // 构建 links（source 属性必须从 0 开始）
+        edges = genLinks(tempEdges);
+        console.log('123123', edges, nodesData)
+        // 设置一个颜色比例尺
+        let colorScale = d3.scaleOrdinal()
+            .domain(d3.range(nodesData.length))
+            .range(d3.schemeCategory10)
+        // 新建一个力导向图
+
+        forceSimulation2 = d3.forceSimulation()
+            .force('link', d3.forceLink().links(edges))
+            .force('charge', d3.forceManyBody().strength(function (a) {
+                // 默认斥力
+                let strength = -10;
+
+                nodes.forEach(b => {
+                    if (a !== b) {
+                        // 检查a和b之间是否有连接
+                        const connected = isConnected(a, b);
+
+                        // 根据连接状态和group属性调整斥力
+                        if (connected && (a.group === 1 || b.group === 1)) {
+                            strength = -10; // 与group为1的节点有连接
+                        } else if (!connected && (a.group === 1 || b.group === 1)) {
+                            strength = -100; // 与group为1的节点无连接
+                        }
+                    }
+                });
+
+                return strength;
+            }))
+            .force('center', d3.forceCenter(width / 2, height / 2));
+
+        function isConnected(a, b) {
+            return edges.some(edge => (edge.source === a && edge.target === b) || (edge.source === b && edge.target === a));
+        }
+
+        // 检查节点是否与group为1的节点有连接
+        function isConnectedToGroup1(node) {
+            return edges.some(edge => (edge.source.id === node.id || edge.target.id === node.id) && (edge.source.group === 1 || edge.target.group === 1));
+        }
+        // 生成节点数据
+        forceSimulation2.nodes(nodesData)
+        // 生成边数据
+        forceSimulation2.force('link')
+            .links(edges)
+            .distance(function (d) { // 每一边的长度
+                return d.value * 150
+            })
+        // 设置图形中心位置
+        forceSimulation2.force('center')
+            .x(230)
+            .y(200)
+        // 箭头
+        var marker = g.append('g').attr('class', 'showLine').append('marker')
+            .attr('id', 'resolved')
+            // .attr("markerUnits","strokeWidth")// 设置为strokeWidth箭头会随着线的粗细发生变化
+            .attr('markerUnits', 'userSpaceOnUse')
+            .attr('viewBox', '0 -5 10 10')// 坐标系的区域
+            .attr('refX', 35)// 箭头坐标
+            .attr('refY', 0)
+            .attr('markerWidth', 10)// 标识的大小
+            .attr('markerHeight', 10)
+            .attr('orient', 'auto')// 绘制方向，可设定为：auto（自动确认方向）和 角度值
+            .attr('stroke-width', 2)// 箭头宽度
+            .append('path')
+            .attr('d', 'M0,-5L10,0L0,5')// 箭头的路径
+            .attr('fill', '#000000')// 箭头颜色
+        // 绘制边
+        let links = g.append('g').selectAll('path')
+            .data(edges)
+            .enter()
+            .append('path')
+            .attr('d', link => genLinkPath(link)) // 遍历所有数据。d表示当前遍历到的数据，返回绘制的贝塞尔曲线
+            .attr('id', (d, i) => { return 'edgepath' + d.id }) // 设置id，用于连线文字
+            .style('stroke', '#000') // 颜色
+            .style('stroke-width', 2) // 粗细
+            .attr('class', 'lines')
+            .attr('marker-end', 'url(#resolved)') // 根据箭头标记的id号标记箭头
+        // 边上的文字
+        let linksText = g.append('g')
+            .selectAll('text')
+            .data(edges)
+            .enter()
+            .append('text')
+            .attr('class', 'linksText')
+
+            .text(function (d) {
+                return d.relations
+            })
+            .style('font-size', 18)
+            .attr('fill-opacity', 0)
+
+        // 创建分组
+        let gs = g.append('g')
+            .selectAll('.circleText')
+            .data(nodesData)
+            .enter()
+            .append('g')
+            .attr('class', 'singleNode')
+            .attr('id', function (d) {
+                return 'singleNode' + d.id
+            })
+            .style('cursor', 'pointer')
+            .attr('transform', function (d) {
+                let cirX = d.x
+                let cirY = d.y
+                return 'translate(' + cirX + ',' + cirY + ')'
+            })
+        // 鼠标交互
+        gs.on('mouseover', function (d, i) {
+            // 显示连接线上的文字
+            toggleLineText(d, true)
+            toggleLine(links, d, true)
+            toggleNode(gs, d, true)
+        })
+            .on('mouseout', function (d, i) {
+                // 隐去连接线上的文字
+                toggleLineText(d, false)
+                toggleLine(links, d, false)
+                toggleNode(gs, d, false)
+            })
+            .on('click', function (d, i) {
+                linksText.style('fill-opacity', function (edge) {
+                    if (edge.source === d) {
+                        return 1
+                    }
+                })
+                toggleCircle(d3.select(this), d)
+            }, true)
+            .call(d3.drag()
+                .on('start', started)
+                .on('drag', dragged)
+                .on('end', ended)
+            )
+        svg.on('click', function () {
+            nodes.forEach(d => d.clickFlag = false)
+            var event = d3.event
+            var target = event.srcElement,   //  获取事件发生源
+                data = d3.select(target).datum(); //  获取事件发生源的数据
+            removeSingle()
+            if (!data) {
+                document.getElementById('xxx').innerText = ''
+            }
+        }, true)
+        forceSimulation2.on('tick', ticked)
+        function toggleLineText(currNode, isHover) {
+            if (isHover) {
+                linksText.style('fill-opacity', function (edge) {
+                    // 修改这里来包括当当前节点是连接线的目标时
+                    if (edge.source === currNode || edge.target === currNode) {
+                        return 1;
+                    }
+                });
+            } else {
+                linksText.style('fill-opacity', function (edge) {
+                    if (edge.source === currNode || edge.target === currNode) {
+                        return 0;
+                    }
+                });
+            }
+        }
+        function toggleLine(linkLine, currNode, isHover) {
+            if (isHover) {
+                // 加重连线样式
+                links
+                    .style('opacity', 0.1)
+                    .filter(link => isLinkLine(currNode, link))
+                    .style('opacity', 1)
+                    .classed('link-active', true)
+            } else {
+                links
+                    .style('opacity', 1)
+                    .classed('link-active', false)
+            }
+        }
+        function showMyList() {
+            var e = { id: 10, name: "河北" };
+            var h = { id: 11, name: "河南" };
+            var f = { id: 13, source: 9, target: 10, relation: '222', value: 2 };
+            nodes.push(e);
+            nodes.push(h);
+            tempEdges.push(f);
+            nodesMap = genNodesMap(nodes);
+            nodesData = d3.values(nodesMap)
+            linkMap = genLinkMap(tempEdges)
+            edges = genLinks(tempEdges)
+            updateData()
+        }
+        function updateData() {
+            links = links
+                .data(edges, function (d) {
+                })
+                .join("path")
+                .attr('id', (d, i) => { return 'edgepath' + d.id }) // 设置id，用于连线文字
+                .style('stroke', '#000') // 颜色
+                .style('stroke-width', 2) // 粗细
+                .attr('class', 'lines')
+                .attr('marker-end', 'url(#resolved)') // 根据箭头标记的id号标记箭头
+                .merge(links);
+            linksText = linksText
+                .data(edges)
+                .join('text')
+                .attr('class', 'linksText')
+                .text(function (d) {
+                    return d.relations
+                })
+                .style('font-size', 14)
+                .style('font-family', '生肖体')  // 设置字体为行楷
+                .attr('fill-opacity', 0)
+            gs = gs
+                .data(nodesData, function (d) {
+                })
+                .join("g")
+                .attr('class', 'singleNode')
+                .attr('id', function (d) {
+                    return 'singleNode' + d.id
+                })
+                .style('cursor', 'pointer')
+                .merge(gs)
+                .call(d3.drag()
+                    .on("start", started)
+                    .on("drag", dragged)
+                    .on("end", ended));
+            gs.append('circle')
+                .attr('fill', function (d) {
+                    return 'orange'
+                })
+                .attr('r', 35)
+                .attr('stroke', 'grey')
+                .attr('stroke-width', 3)
+            gs.on('mouseover', function (d, i) {
+                // 显示连接线上的文字
+                toggleLineText(d, true)
+                toggleLine(links, d, true)
+                toggleNode(gs, d, true)
+            })
+                .on('mouseout', function (d, i) {
+                    // 隐去连接线上的文字
+                    toggleLineText(d, false)
+                    toggleLine(links, d, false)
+                    toggleNode(gs, d, false)
+                })
+                .on('click', function (d, i) {
+                    linksText.style('fill-opacity', function (edge) {
+                        if (edge.source === d) {
+                            return 1
+                        }
+                    })
+                    toggleCircle(d3.select(this), d)
+                }, true)
+            gs.append('text')
+                .attr('y', -20)
+                .attr('dy', 10)
+                .attr('text-anchor', 'middle')
+                .style('font-size', 12)
+                .style('font-family', 'STKaiti')  // 设置字体为行楷
+                .attr('x', function ({ name }) {
+                    return textBreaking(d3.select(this), name)
+                })
+            gs.append('title')
+                .text((node) => {
+                    return node.name
+                })
+            forceSimulation2.nodes(nodesData);
+            forceSimulation2.force("link").links(edges);
+            forceSimulation2.alpha(0.8).restart();
+        }
+        function getLineTextAngle(d, bbox) {
+            if (d.target.x < d.source.x) {
+                const {
+                    x,
+                    y,
+                    width,
+                    height
+                } = bbox;
+                const rx = x + width / 2;
+                const ry = y + height / 2;
+                return 'rotate(180 ' + rx + ' ' + ry + ')';
+            } else {
+                return 'rotate(0)';
+            }
+        }
+        function toggleNode(nodeCircle, currNode, isHover) {
+            if (isHover) {
+                // 提升节点层级
+                // nodeCircle.sort((a, b) => a.id === currNode.id ? 1 : -1);
+                // this.parentNode.appendChild(this);
+                nodeCircle
+                    .style('opacity', .1)
+                    .filter(node => isLinkNode(currNode, node))
+                    .style('opacity', 1);
+
+            } else {
+                nodeCircle.style('opacity', 1);
+            }
+
+        }
+        function removeSingle() {
+            d3.select('.singleCircle').remove()
+        }
+        function toggleCircle(current, d) {
+            var currentD = d
+            if (d.clickFlag) {
+                removeSingle()
+                document.getElementById('xxx').innerText = ''
+            }
+            d.clickFlag = true
+            document.getElementById('xxx').innerText = d.name
+            var data = [{
+                population: 30,
+                value: 'X',
+                type: 'delete'
+            }, {
+                population: 30,
+                value: '收起',
+                type: 'showOn'
+            }, {
+                population: 30,
+                value: '展开',
+                type: 'showOff'
+            }]
+            var sum = d3.sum(data.map(function (d) {
+                return d.population
+            }))
+            for (i in data) {
+                data[i].Percentage = (data[i].population / sum * 100).toFixed(0) + "%";
+            }
+            var width = 300,
+                height = 300,
+                margin = { "left": 30, "top": 30, "right": 30, "bottom": 30 },
+                svg_width = width + margin.left + margin.right,
+                svg_height = height + margin.top + margin.bottom,
+                font_size = 15;
+            var g = current
+                .append("g")
+                .attr('class', 'singleCircle')
+                .attr("width", width)
+                .attr("height", height)
+            var Pie = g.append("g")
+
+            var arc_generator = d3.arc()
+                .innerRadius(width / 6.5)
+                .outerRadius(width / 4)
+            var angle_data = d3.pie()
+                .value(function (d) {
+                    return d.population;
+                })
+            var pieData = angle_data(data)
+            var pieAngle = pieData.map(function (p) {
+                return (p.startAngle + p.endAngle) / 2 / Math.PI * 180;
+            });
+
+
+            //生成内部圆环
+            Pie.selectAll("path")
+                .data(angle_data(data))
+                .enter()
+                .append("path")
+                .attr("d", arc_generator)
+                .style("fill", function (d, i) {
+                    return 'grey';
+                })
+                .style('stroke', 'black')
+                .attr("class", "path")
+                .attr('type', function (d) {
+                    return d.data.type
+                })
+                .on('click', function (d) {
+                    if (d.data.type === 'delete') {
+                        deleteNode(currentD)
+                    } else if (d.data.type === 'showOn') {
+                        deleteNextNodes(currentD)
+                    } else {
+                        // showMyList()
+                    }
+                    d3.event.stopPropagation()
+                })
+            var arc_label = d3.arc()
+                .innerRadius(width / 4)
+                .outerRadius(width / 2)
+
+            Pie.selectAll(".arc_label")
+                .data(angle_data(data))
+                .enter()
+                .append("path")
+                .attr("d", arc_label)
+                .attr("class", "arc_label")
+                .style("fill", "none")
+            const labelFontSize = 12;
+            const labelValRadius = (170 * 0.35 - labelFontSize * 0.35); // 计算正确半径 文字位置
+            const labelValRadius1 = (170 * 0.35 + labelFontSize * 0.35);
+
+
+            const labelsVals = current.select('.singleCircle').append('g')
+                .classed('labelsvals', true);
+
+            // 定义两条路径以使标签的方向正确
+            labelsVals.append('def')
+                .append('path')
+                .attr('id', 'label-path-1')
+                .attr('d', `m0 ${-labelValRadius} a${labelValRadius} ${labelValRadius} 0 1,1 -0.01 0`);
+            labelsVals.append('def')
+                .append('path')
+                .attr('id', 'label-path-2')
+                .attr('d', `m0 ${-labelValRadius1} a${labelValRadius1} ${labelValRadius1} 0 1,0 0.01 0`);
+
+            labelsVals.selectAll('text')
+                .data(data)
+                .enter()
+                .append('text')
+                .style('font-size', labelFontSize)
+                .style('font-family', 'STKaiti')  // 设置字体为行楷
+                .style('fill', 'black')
+                .style('font-weight', "bold")
+                .style('text-anchor', 'middle')
+                .append('textPath')
+                .attr('href', function (d, i) {
+                    const p = pieData[i];
+                    const angle = pieAngle[i];
+                    if (angle > 90 && angle <= 270) { // 根据角度选择路径
+                        return '#label-path-2';
+                    } else {
+                        return '#label-path-1';
+                    }
+                })
+                .attr('startOffset', function (d, i) {
+                    const p = pieData[i];
+                    const angle = pieAngle[i];
+                    let percent = (p.startAngle + p.endAngle) / 2 / 2 / Math.PI * 100;
+                    if (angle > 90 && angle <= 270) { // 分别计算每条路径的正确百分比
+                        return 100 - percent + "%";
+                    }
+                    return percent + "%";
+                })
+                .text(function (d) {
+                    return d.value;
+                })
+                .on('click', function (d) {
+                    if (d.type === 'delete') {
+                        deleteNode(currentD)
+                    } else if (d.type === 'showOn') {
+                        deleteNextNodes(currentD)
+                    } else {
+                        // showMyList()
+                    }
+                    d3.event.stopPropagation()
+                }, true)
+        }
+        //删除当前节点下一级没有其他关系的节点
+        function deleteNextNodes(curr) {
+            document.getElementById('xxx').innerText = '';
+            // var removeIndex = nodesData.findIndex(node=>node.id == curr.id)
+            // nodesData.splice(removeIndex,1)
+            // nodes.splice(removeIndex,1)
+            d3.select(this).remove();
+            let relationNode = [],
+                relationList = [],
+                hasRelationList = []
+            var clickNode = curr.id;//点击节点的名字
+            d3.selectAll(".lines").each(function (e) {
+                if (e.source.id == curr.id || e.target.id == curr.id) {
+                    hasRelationList.push(e)
+                } else {
+                    relationList.push(e)//出去跟删除节点有关系的其他关系
+                }
+                //需要删除的节点相关的节点
+                if (e.source.id == curr.id) {
+                    relationNode.push(e.target)
+                }
+                //需要删除的节点相关的节点
+                if (e.target.id == curr.id) {
+                    relationNode.push(e.source)
+                }
+            })
+            var tempNodeList = JSON.parse(JSON.stringify(relationNode))
+            tempNodeList = uniqObjInArray(tempNodeList)
+            //区分下级节点是否是孤节点
+            tempNodeList.forEach(function (item, index) {
+                var hasLine = relationList.findIndex(jtem => jtem.target.id == item.id || jtem.source.id == item.id)
+                if (hasLine >= 0) {
+                    item.notSingle = true
+                }
+            })
+            tempNodeList.forEach(function (item, index) {
+                if (!item.notSingle) {
+                    d3.select('#singleNode' + item.id).remove()
+                }
+            })
+            var otherTempNode = [];
+            tempNodeList = tempNodeList.map(item => {
+                if (!item.notSingle) {
+                    otherTempNode.push(item)
+                }
+            })
+            hasRelationList.forEach(item => {
+                otherTempNode.forEach(jtem => {
+                    if (jtem.id == item.source.id || jtem.id == item.target.id) {
+                        d3.select('#edgepath' + item.id).remove()
+                    }
+                })
+            })
+            d3.selectAll(".singleNode").each(function (d, i) {
+                var temp = d.id;
+                //删除当前需要隐藏的节点
+                if (temp == clickNode) {
+                    removeSingle()
+                }
+            });
+            d3.selectAll(".linksText").each(function (e) {
+                if (e.source === curr || e.target === curr) {
+                    d3.select(this).remove();
+                }
+            })
+            gs.style('opacity', 1);
+            links.style('opacity', 1)
+                .classed('link-active', false);
+        }
+        //删除当前及下一级没有其他关系的节点
+        function deleteNode(curr) {
+            document.getElementById('xxx').innerText = '';
+            var removeIndex = nodesData.findIndex(node => node.id == curr.id)
+            nodesData.splice(removeIndex, 1)
+            nodes.splice(removeIndex, 1)
+            d3.select(this).remove();
+            let relationNode = [],
+                relationList = []
+            var clickNode = curr.id;//点击节点的名字
+            d3.selectAll(".lines").each(function (e) {
+                if (e.source.id == curr.id || e.target.id == curr.id) {
+                    d3.select(this).remove();
+                } else {
+                    relationList.push(e)//出去跟删除节点有关系的其他关系
+                }
+                //需要删除的节点相关的节点
+                if (e.source.id == curr.id) {
+                    relationNode.push(e.target)
+                }
+                //需要删除的节点相关的节点
+                if (e.target.id == curr.id) {
+                    relationNode.push(e.source)
+                }
+            })
+            var tempNodeList = JSON.parse(JSON.stringify(relationNode))
+            tempNodeList = uniqObjInArray(tempNodeList)
+            //区分下级节点是否是孤节点
+            tempNodeList.forEach(function (item, index) {
+                var hasLine = relationList.findIndex(jtem => jtem.target.id == item.id || jtem.source.id == item.id)
+                if (hasLine >= 0) {
+                    item.notSingle = true
+                }
+            })
+            tempNodeList.forEach(function (item, index) {
+                if (!item.notSingle) {
+                    d3.select('#singleNode' + item.id).remove()
+                }
+            })
+            d3.selectAll(".singleNode").each(function (d, i) {
+                var temp = d.id;
+                //删除当前需要隐藏的节点
+                if (temp == clickNode) {
+                    removeSingle()
+                    d3.select(this).remove();
+                }
+            });
+            d3.selectAll(".linksText").each(function (e) {
+                if (e.source === curr || e.target === curr) {
+                    d3.select(this).remove();
+                }
+            })
+            gs.style('opacity', 1);
+            links.style('opacity', 1)
+                .classed('link-active', false);
+        }
+        // 关联节点去重重组
+        function uniqObjInArray(objarray) {
+            let len = objarray.length;
+            let tempJson = {
+
+            };
+            let res = [];
+            for (let i = 0; i < len; i++) {
+                //取出每一个对象
+                tempJson[JSON.stringify(objarray[i])] = true;
+            }
+            let keyItems = Object.keys(tempJson);
+            for (let j = 0; j < keyItems.length; j++) {
+                res.push(JSON.parse(keyItems[j]));
+            }
+            return res;
+        }
+        function isLinkLine(node, link) {
+            // 检查当前节点是否是连线的源节点或目标节点
+            return link.source.id === node.id || link.target.id === node.id;
+        }
+
+        function isLinkNode(currNode, node) {
+            if (currNode.id === node.id) {
+                return true;
+            }
+            return linkMap[currNode.id + '-' + node.id] || linkMap[node.id + '-' + currNode.id];
+        }
+        function largerNode(nodes, currNode, isHover) {
+            if (isHover) {
+                gs
+                    .style('stroke-width', 1)
+                    .filter(node => isNode(currNode, node))
+                    .style('stroke-width', 10)
+            } else {
+                gs
+                    .style('stroke-width', 1)
+            }
+        }
+        function isNode(node, cNode) {
+            return true
+        }
+
+        // 定义一个函数，根据 d.group 的值返回相应的颜色
+
+        function getNodeColor(group) {
+            const colors = ['#607460', '#7d1f33', '#ba794d', '#464e65', '#134857', '#b9dec9', '#c08eaf'];
+            return colors[(group + 1) % colors.length]; // 使用模运算符确保 group 值在颜色数组的范围内
+        }
+
+        // 绘制节点
+        gs.append('circle')
+            .attr('r', function (d) {
+                // 如果group为1，半径是70，否则是35
+                return d.group === 1 ? 25 : 25;
+            })
+            .attr('id', function (d) {
+                return 'circle' + d.id;
+            })
+            .attr('fill', d => getNodeColor(d.group))  // 使用 getNodeColor 函数设置填充颜色
+            .attr('stroke', 'grey')
+            .attr('stroke-width', 3);
+
+        // 文字
+        var nodeText = gs.append('text')
+            // .attr('x', -10)
+            .attr('y', -20)
+            .attr('dy', 10)
+            .attr('text-anchor', 'middle')
+            .style('font-size', '14px')
+            .style('fill', 'white')           // 设置文字颜色为白色
+            .style('font-family', '正楷体, 行楷,  生肖体, STKaiti, FangSong, serif')      // 设置字体为行楷
+            .attr('x', function ({ name }) {
+                return textBreaking(d3.select(this), name);
+            });
+        gs.append('title')
+            .text((node) => {
+                return node.name
+            })
+        function genLinkMap(relations) {
+            const hash = {};
+            relations.map(function ({
+                source,
+                target,
+                relation
+            }) {
+                const key = source + '-' + target;
+                if (hash[key]) {
+                    hash[key] += 1;
+                    hash[key + '-relation'] += '、' + relation;
+                } else {
+                    hash[key] = 1;
+                    hash[key + '-relation'] = relation;
+                }
+            });
+            return hash;
+        }
+        function genLinks(relations) {
+            const indexHash = {};
+            return relations.map(function ({
+                id,
+                source,
+                target,
+                relation,
+                value
+            }, i) {
+                const linkKey = source + '-' + target;
+                const count = linkMap[linkKey];
+                if (indexHash[linkKey]) {
+                    indexHash[linkKey] -= 1;
+                } else {
+                    indexHash[linkKey] = count - 1;
+                }
+                return {
+                    id,
+                    source: nodesMap[source],
+                    target: nodesMap[target],
+                    relation,
+                    value,
+                    relations: linkMap[linkKey + '-relation'],
+                    count: linkMap[linkKey],
+                    index: indexHash[linkKey]
+                }
+            })
+        }
+        // 生成关系连线路径
+        function genLinkPath(link) {
+            const count = link.count;
+            const index = link.index;
+            let sx = link.source.x;
+            let tx = link.target.x;
+            let sy = link.source.y;
+            let ty = link.target.y;
+            return 'M' + sx + ',' + sy + ' L' + tx + ',' + ty;
+        }
+        function genNodesMap(nodes) {
+            const hash = {};
+            nodes.map(function ({
+                id,
+                name,
+                group
+            }) {
+                hash[id] = {
+                    id,
+                    name,
+                    group
+                };
+            });
+            return hash;
+        }
+        // 处理节点文字换行
+        function textBreaking(d3text, text) {
+            const len = text.length
+            if (len <= 3) {
+                d3text.append('tspan')
+                    .attr('x', 0)
+                    .attr('y', -3)
+                    .text(text)
+            } else {
+                const topText = text.substring(0, 3)
+                const midText = text.substring(3, 7)
+                let botText = text.substring(7, len)
+                let topY = -22
+                let midY = 8
+                let botY = 34
+                if (len <= 9) {
+                    topY += 10
+                    midY += 10
+                } else {
+                    botText = text.substring(7, 9) + '...'
+                }
+                d3text.text('')
+                d3text.append('tspan')
+                    .attr('x', 0)
+                    .attr('y', topY)
+                    .text(function () {
+                        return topText
+                    })
+                d3text.append('tspan')
+                    .attr('x', 0)
+                    .attr('y', midY)
+                    .text(function () {
+                        return midText
+                    })
+                d3text.append('tspan')
+                    .attr('x', 0)
+                    .attr('y', botY - 7)
+                    .text(function () {
+                        return botText
+                    })
+            }
+        }
+        // ticked
+        function ticked() {
+            // 连线路径
+            links
+                .attr('d', link => genLinkPath(link))
+            // 连线文字位置
+            linksText
+                .attr('x', function (d) { return (d.source.x + d.target.x) / 2 })
+                .attr('y', function (d) { return (d.source.y + d.target.y) / 2 })
+            // 节点位置
+            gs.attr('transform', function (d) { return 'translate(' + d.x + ',' + d.y + ')' })
+            // 将group为1的圆移动到父元素的最后，使其始终置顶
+            gs.each(function (d) {
+                if (d.group === 1) {
+                    this.parentNode.appendChild(this);
+                }
+            });
+        }
+        // drag
+        function started(d) {
+            if (!d3.event.active) {
+                forceSimulation2.alphaTarget(0.8).restart() // 设置衰减系数，对节点位置移动过程的模拟，数值越高移动越快，数值范围[0, 1]
+            }
+            d.fx = d.x
+            d.fy = d.y
+        }
+        function dragged(d) {
+            d.fx = d3.event.x
+            d.fy = d3.event.y
+        }
+        function ended(d) {
+            if (!d3.event.active) {
+                forceSimulation2.alphaTarget(0)
+            }
+            d.fx = null
+            d.fy = null
+        }
+    }
+
+</script>
+
+
+
+
+
+</html>
