@@ -10,4 +10,13 @@ Vis_World小组项目——千年金陵：数字漫游南京的历史文脉与�
 
 “金陵文脉数据集”中包含两类数据：其一为从南京相关历史文献资料中提取出的5553条数据，包括地点（1332条）、人物（1695条）、事件（454条）、作品（2072条）四类，占数据库总量的70%；其二为从数据库中提取的与南京有关的1300首诗歌的全文数据，时间跨度为六朝至当代，共计100,269字符。
 
+## 项目海报
 ![](img/poster.png)
+
+## 环境要求
+python=3.8，需要安装flask和py2neo库
+由于后端连接了图数据库，可以提供query功能，因此运行app.py前需要运行:neo4j.bat console
+test.py中需要配备自身neo4j环境的账号密码，以及数据库名称
+neo4j导入命令：neo4j-admin database load --overwrite-destination=true --from-path=[your\own\path\]  neo4j
+neo4j导出命令：neo4j-admin database dump --to-path=[your\own\path\] neo4j
+
