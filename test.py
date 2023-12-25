@@ -1,24 +1,10 @@
 from py2neo import Graph
 from py2neo.cypher import encoding
 import json
-import subprocess
-
-def start_neo4j():
-    try:
-        # 假设Neo4j安装在默认路径，调整为你的实际安装路径
-        neo4j_start_command = "/usr/vis_world/neo4j-community-4.4.28/bin/neo4j start"
-        subprocess.run(neo4j_start_command, check=True, shell=True)
-        print("Neo4j has been started successfully.")
-    except subprocess.CalledProcessError as e:
-        print(f"Failed to start Neo4j: {e}")
-
 
 def query_knowledge_graph(character=None, dynasty=None, literary_style=None, location=None):
 
-    # 调用函数启动Neo4j
-    start_neo4j()
-
-    graph = Graph("https://47.108.164.230:7474/browser", user="neo4j", password="123456",name="neo4j")
+    graph = Graph("https://[your_own_IP_address]/browser", user="user_name", password="user_codes",name="user_database")
 
     query = "MATCH (article)"
     where_conditions = []
